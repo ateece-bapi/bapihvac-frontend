@@ -3,6 +3,8 @@
  * Fetches data from the WordPress REST API
  */
 
+import type { WordPressPost } from '@/types/wordpress';
+
 const WORDPRESS_API_URL =
   process.env.NEXT_PUBLIC_WORDPRESS_API_URL ||
   'https://www.bapihvac.com/wp-json';
@@ -136,6 +138,31 @@ function getMockProducts() {
   ];
 }
 
+// Convert WordPress posts to product format (fallback)
+function convertPostsToProducts(posts: WordPressPost[]) {
+  return posts.map((post, index) => ({
+    id: post.id,
+    name: post.title.rendered,
+    slug: post.slug,
+    price: "0.00", // Posts don't have prices
+    regular_price: "0.00",
+    sku: `POST-${post.id}`,
+    stock_status: "instock",
+    images: [{
+      id: post.featured_media || index + 100,
+      src: "https://via.placeholder.com/300x200/0066cc/ffffff?text=BAPI+Product",
+      alt: post.title.rendered
+    }],
+    categories: [{
+      id: 1,
+      name: "General",
+      slug: "general"
+    }],
+    short_description: post.excerpt.rendered.replace(/<[^>]*>/g, '').substring(0, 100),
+    description: post.content.rendered.replace(/<[^>]*>/g, '').substring(0, 200)
+  }));
+}
+
 // WooCommerce - Get all products (with authentication)
 export async function getProducts() {
   const consumerKey = process.env.WOOCOMMERCE_CONSUMER_KEY;
@@ -143,21 +170,29 @@ export async function getProducts() {
 
   if (!consumerKey || !consumerSecret) {
     console.warn('WooCommerce API keys not configured, returning mock data');
-    // Return mock data for development
     return getMockProducts();
   }
 
+  // First try: Direct WooCommerce API with URL parameters
   try {
-    // Use URL parameters instead of Basic auth to avoid header issues
     const params = new URLSearchParams({
       consumer_key: consumerKey,
       consumer_secret: consumerSecret,
+      per_page: '10', // Limit to reduce response size
     });
 
-    return fetchAPI(`/wc/v3/products?${params.toString()}`);
+    return await fetchAPI(`/wc/v3/products?${params.toString()}`);
   } catch (error) {
-    console.error('WooCommerce API failed, falling back to mock data:', error);
-    return getMockProducts();
+    console.warn('WooCommerce API failed, trying WordPress posts as fallback:', error);
+    
+    // Second try: Use WordPress posts with product category
+    try {
+      const posts = await fetchAPI('/wp/v2/posts?categories=products&per_page=10');
+      return convertPostsToProducts(posts);
+    } catch (fallbackError) {
+      console.error('All API attempts failed, using mock data:', fallbackError);
+      return getMockProducts();
+    }
   }
 }
 
