@@ -3,11 +3,18 @@
  * Fetches data from the WordPress REST API
  */
 
+import type { WordPressPost } from '@/types/wordpress';
+
 const WORDPRESS_API_URL =
   process.env.NEXT_PUBLIC_WORDPRESS_API_URL ||
   'https://www.bapihvac.com/wp-json';
 
-export async function fetchAPI(endpoint: string, options = {}) {
+interface FetchOptions {
+  headers?: Record<string, string>;
+  [key: string]: unknown;
+}
+
+export async function fetchAPI(endpoint: string, options: FetchOptions = {}) {
   const url = `${WORDPRESS_API_URL}${endpoint}`;
 
   try {
@@ -15,16 +22,26 @@ export async function fetchAPI(endpoint: string, options = {}) {
       ...options,
       headers: {
         'Content-Type': 'application/json',
-        ...options.headers,
+        'User-Agent': 'BAPI-Frontend/1.0',
+        ...(options.headers || {}),
       },
     });
 
     if (!response.ok) {
-      throw new Error(`API Error: ${response.status}`);
+      throw new Error(`API Error: ${response.status} ${response.statusText}`);
     }
 
     return await response.json();
-  } catch (error) {
+  } catch (error: unknown) {
+    // Handle specific header overflow errors
+    const errorAny = error as Record<string, unknown>;
+    if (errorAny?.code === 'UND_ERR_HEADERS_OVERFLOW' || 
+        (typeof errorAny?.message === 'string' && errorAny.message.includes('Headers Overflow')) ||
+        (errorAny?.cause as Record<string, unknown>)?.code === 'UND_ERR_HEADERS_OVERFLOW') {
+      console.error('WordPress API Headers Overflow - API may be misconfigured:', error);
+      throw new Error('WordPress API configuration error - headers too large');
+    }
+    
     console.error('WordPress API Error:', error);
     throw error;
   }
@@ -52,12 +69,155 @@ export async function getPageBySlug(slug: string) {
   return pages[0];
 }
 
-// WooCommerce - Get all products
-export async function getProducts() {
-  return fetchAPI('/wc/v3/products');
+// Mock data for development when WooCommerce API is not available
+function getMockProducts() {
+  return [
+    {
+      id: 1,
+      name: "Temperature Sensor - Model TS-101",
+      slug: "temperature-sensor-ts-101",
+      price: "129.99",
+      regular_price: "129.99",
+      sku: "TS-101",
+      stock_status: "instock",
+      images: [{
+        id: 1,
+        src: "https://via.placeholder.com/300x200/0066cc/ffffff?text=BAPI+Sensor",
+        alt: "Temperature Sensor TS-101"
+      }],
+      categories: [{
+        id: 1,
+        name: "Temperature Sensors",
+        slug: "temperature-sensors"
+      }],
+      short_description: "High-precision temperature sensor for HVAC applications",
+      description: "Professional-grade temperature sensor designed for commercial HVAC systems."
+    },
+    {
+      id: 2,
+      name: "Humidity Sensor - Model HS-202",
+      slug: "humidity-sensor-hs-202", 
+      price: "149.99",
+      regular_price: "149.99",
+      sku: "HS-202",
+      stock_status: "instock",
+      images: [{
+        id: 2,
+        src: "https://via.placeholder.com/300x200/0066cc/ffffff?text=BAPI+Humidity",
+        alt: "Humidity Sensor HS-202"
+      }],
+      categories: [{
+        id: 2,
+        name: "Humidity Sensors",
+        slug: "humidity-sensors"
+      }],
+      short_description: "Accurate humidity monitoring for optimal climate control",
+      description: "Advanced humidity sensor with digital output for precise environmental monitoring."
+    },
+    {
+      id: 3,
+      name: "Pressure Transmitter - Model PT-303",
+      slug: "pressure-transmitter-pt-303",
+      price: "299.99", 
+      regular_price: "299.99",
+      sku: "PT-303",
+      stock_status: "instock",
+      images: [{
+        id: 3,
+        src: "https://via.placeholder.com/300x200/0066cc/ffffff?text=BAPI+Pressure",
+        alt: "Pressure Transmitter PT-303"
+      }],
+      categories: [{
+        id: 3,
+        name: "Pressure Sensors",
+        slug: "pressure-sensors"
+      }],
+      short_description: "Industrial-grade pressure transmitter",
+      description: "Reliable pressure measurement for critical HVAC applications."
+    }
+  ];
 }
 
-// WooCommerce - Get a single product
+// Convert WordPress posts to product format (fallback)
+function convertPostsToProducts(posts: WordPressPost[]) {
+  return posts.map((post, index) => ({
+    id: post.id,
+    name: post.title.rendered,
+    slug: post.slug,
+    price: "0.00", // Posts don't have prices
+    regular_price: "0.00",
+    sku: `POST-${post.id}`,
+    stock_status: "instock",
+    images: [{
+      id: post.featured_media || index + 100,
+      src: "https://via.placeholder.com/300x200/0066cc/ffffff?text=BAPI+Product",
+      alt: post.title.rendered
+    }],
+    categories: [{
+      id: 1,
+      name: "General",
+      slug: "general"
+    }],
+    short_description: post.excerpt.rendered.replace(/<[^>]*>/g, '').substring(0, 100),
+    description: post.content.rendered.replace(/<[^>]*>/g, '').substring(0, 200)
+  }));
+}
+
+// WooCommerce - Get all products (with authentication)
+export async function getProducts() {
+  const consumerKey = process.env.WOOCOMMERCE_CONSUMER_KEY;
+  const consumerSecret = process.env.WOOCOMMERCE_CONSUMER_SECRET;
+
+  if (!consumerKey || !consumerSecret) {
+    console.warn('WooCommerce API keys not configured, returning mock data');
+    return getMockProducts();
+  }
+
+  // First try: Direct WooCommerce API with URL parameters
+  try {
+    const params = new URLSearchParams({
+      consumer_key: consumerKey,
+      consumer_secret: consumerSecret,
+      per_page: '10', // Limit to reduce response size
+    });
+
+    return await fetchAPI(`/wc/v3/products?${params.toString()}`);
+  } catch (error) {
+    console.warn('WooCommerce API failed, trying WordPress posts as fallback:', error);
+    
+    // Second try: Use WordPress posts with product category
+    try {
+      const posts = await fetchAPI('/wp/v2/posts?categories=products&per_page=10');
+      return convertPostsToProducts(posts);
+    } catch (fallbackError) {
+      console.error('All API attempts failed, using mock data:', fallbackError);
+      return getMockProducts();
+    }
+  }
+}
+
+// WooCommerce - Get a single product (with authentication)
 export async function getProduct(id: number) {
-  return fetchAPI(`/wc/v3/products/${id}`);
+  const consumerKey = process.env.WOOCOMMERCE_CONSUMER_KEY;
+  const consumerSecret = process.env.WOOCOMMERCE_CONSUMER_SECRET;
+
+  if (!consumerKey || !consumerSecret) {
+    console.warn('WooCommerce API keys not configured, returning mock data');
+    const mockProducts = getMockProducts();
+    return mockProducts.find(p => p.id === id) || mockProducts[0];
+  }
+
+  try {
+    // Use URL parameters instead of Basic auth to avoid header issues
+    const params = new URLSearchParams({
+      consumer_key: consumerKey,
+      consumer_secret: consumerSecret,
+    });
+
+    return fetchAPI(`/wc/v3/products/${id}?${params.toString()}`);
+  } catch (error) {
+    console.error('WooCommerce API failed, falling back to mock data:', error);
+    const mockProducts = getMockProducts();
+    return mockProducts.find(p => p.id === id) || mockProducts[0];
+  }
 }
