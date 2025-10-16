@@ -1,6 +1,6 @@
-import Image from 'next/image';
 import Link from 'next/link';
 import { WooCommerceProduct } from '@/types/wordpress';
+import { ImageContainer } from '../ui';
 
 interface ProductCardProps {
   product: WooCommerceProduct;
@@ -14,12 +14,13 @@ export default function ProductCard({ product }: ProductCardProps) {
     >
       {/* Product Image */}
       {product.images && product.images[0] && (
-        <div className="mb-4 aspect-square relative bg-gray-100 rounded-md overflow-hidden">
-          <Image
+        <div className="mb-4">
+          <ImageContainer
             src={product.images[0].src}
             alt={product.name}
-            fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             className="object-cover group-hover:scale-105 transition-transform duration-300"
+            containerClassName="aspect-square relative bg-gray-100 rounded-md overflow-hidden"
           />
         </div>
       )}

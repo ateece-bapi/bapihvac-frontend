@@ -1,6 +1,5 @@
-import Image from 'next/image';
 import { WooCommerceProduct } from '@/types/wordpress';
-import { Button } from '../ui';
+import { Button, ImageContainer } from '../ui';
 
 interface ProductDetailsProps {
   product: WooCommerceProduct;
@@ -13,29 +12,28 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
       <div className="space-y-4">
         {/* Main Image */}
         {product.images && product.images[0] && (
-          <div className="aspect-square relative bg-gray-100 rounded-lg overflow-hidden">
-            <Image
-              src={product.images[0].src}
-              alt={product.name}
-              fill
-              className="object-cover"
-              priority
-            />
-          </div>
+          <ImageContainer
+            src={product.images[0].src}
+            alt={product.name}
+            sizes="(max-width: 768px) 100vw, 50vw"
+            className="object-cover"
+            containerClassName="aspect-square relative bg-gray-100 rounded-lg overflow-hidden"
+            priority
+          />
         )}
         
         {/* Image Gallery */}
         {product.images && product.images.length > 1 && (
           <div className="grid grid-cols-4 gap-2">
             {product.images.slice(1, 5).map((image, index) => (
-              <div key={index} className="aspect-square relative bg-gray-100 rounded-md overflow-hidden">
-                <Image
-                  src={image.src}
-                  alt={`${product.name} ${index + 2}`}
-                  fill
-                  className="object-cover hover:opacity-80 transition-opacity cursor-pointer"
-                />
-              </div>
+              <ImageContainer
+                key={index}
+                src={image.src}
+                alt={`${product.name} ${index + 2}`}
+                sizes="(max-width: 768px) 25vw, 12vw"
+                className="object-cover hover:opacity-80 transition-opacity cursor-pointer"
+                containerClassName="aspect-square relative bg-gray-100 rounded-md overflow-hidden"
+              />
             ))}
           </div>
         )}
