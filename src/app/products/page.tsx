@@ -5,53 +5,47 @@ export default async function ProductsPage() {
     const products = await getProducts();
 
     return (
-      <main style={{ padding: '2rem', maxWidth: '1200px', margin: '0 auto' }}>
-        <h1>WooCommerce Products Test</h1>
-        <p>Found {products.length} products</p>
+      <main className="max-w-7xl mx-auto p-8">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-bapi-blue mb-4">BAPI HVAC Products</h1>
+          <p className="text-gray-600">Found {products.length} products</p>
+        </div>
 
-        <div style={{ 
-          display: 'grid', 
-          gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
-          gap: '2rem',
-          marginTop: '2rem'
-        }}>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {products.map((product: any) => (
-            <div 
+            <a
               key={product.id}
-              style={{
-                border: '1px solid #ddd',
-                borderRadius: '8px',
-                padding: '1rem',
-                backgroundColor: '#fff'
-              }}
+              href={`/products/${product.slug}`}
+              className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow block"
             >
               {product.images && product.images[0] && (
-                <img 
-                  src={product.images[0].src} 
-                  alt={product.name}
-                  style={{ width: '100%', height: '200px', objectFit: 'cover', borderRadius: '4px' }}
-                />
+                <div className="mb-4">
+                  <img 
+                    src={product.images[0].src} 
+                    alt={product.name}
+                    className="w-full h-48 object-cover rounded-md"
+                  />
+                </div>
               )}
-              <h3 style={{ marginTop: '1rem' }}>{product.name}</h3>
-              <p style={{ color: '#666', fontSize: '0.9rem' }}>SKU: {product.sku}</p>
-              <p style={{ fontWeight: 'bold', fontSize: '1.2rem', marginTop: '0.5rem' }}>
-                ${product.price}
-              </p>
-            </div>
+              <div className="space-y-2">
+                <h3 className="font-semibold text-gray-900 line-clamp-2 leading-tight">
+                  {product.name}
+                </h3>
+                <p className="text-sm text-gray-500">SKU: {product.sku}</p>
+                <p className="text-lg font-bold text-bapi-blue">
+                  ${product.price}
+                </p>
+              </div>
+            </a>
           ))}
         </div>
       </main>
     );
   } catch (error) {
     return (
-      <main style={{ padding: '2rem' }}>
-        <h1>Error Loading Products</h1>
-        <pre style={{ 
-          backgroundColor: '#fee', 
-          padding: '1rem', 
-          borderRadius: '4px',
-          overflow: 'auto'
-        }}>
+      <main className="max-w-7xl mx-auto p-8">
+        <h1 className="text-3xl font-bold text-red-600 mb-4">Error Loading Products</h1>
+        <pre className="bg-red-50 border border-red-200 text-red-800 p-4 rounded-md overflow-auto text-sm">
           {error instanceof Error ? error.message : 'Unknown error'}
         </pre>
       </main>
