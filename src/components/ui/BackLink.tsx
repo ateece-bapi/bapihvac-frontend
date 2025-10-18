@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { Icon } from './Icon';
 
 interface BackLinkProps {
   href: string;
@@ -10,9 +11,10 @@ export default function BackLink({ href, children }: BackLinkProps) {
     <div className="mt-12">
       <Link 
         href={href}
-        className="inline-flex items-center text-bapi-blue hover:text-bapi-blue-dark transition-colors"
+        className="inline-flex items-center gap-2 text-bapi-blue hover:text-bapi-blue-dark transition-colors"
       >
-        ← {children}
+        <Icon name="arrowLeft" size="sm" className="transition-transform group-hover:-translate-x-1" />
+        {children}
       </Link>
     </div>
   );
