@@ -11,12 +11,13 @@ Modern frontend for [bapihvac.com](https://www.bapihvac.com/), built with Next.j
 ## 🚀 Quick Start
 
 ```bash
+
 # Install dependencies
-npm install
+pnpm install
 
 # Copy environment variables
 cp .env.example .env.local
 # Edit .env.local with your WordPress API credentials
 
 # Run development server
-npm run dev
+pnpm run dev
