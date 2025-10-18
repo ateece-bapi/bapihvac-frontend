@@ -1,19 +1,34 @@
 import Link from 'next/link';
 import { WooCommerceProduct } from '@/types/wordpress';
-import { ImageContainer } from '../ui';
+import { ImageContainer, Icon } from '../ui';
 
 interface ProductCardProps {
   product: WooCommerceProduct;
 }
 
 export default function ProductCard({ product }: ProductCardProps) {
+  // Determine product type icon based on name/category
+  const getProductIcon = (product: WooCommerceProduct) => {
+    const name = product.name.toLowerCase();
+    const category = product.categories?.[0]?.name?.toLowerCase() || '';
+    
+    if (name.includes('sensor') || category.includes('sensor')) return 'sensor';
+    if (name.includes('transmitter') || category.includes('transmitter')) return 'transmitter';
+    if (name.includes('wireless') || name.includes('wifi')) return 'wireless';
+    if (name.includes('temperature') || name.includes('temp')) return 'thermometer';
+    if (name.includes('pressure') || name.includes('gauge')) return 'gauge';
+    if (name.includes('humidity') || name.includes('rh')) return 'activity';
+    
+    return 'sensor'; // Default for general products
+  };
+
   return (
     <Link
       href={`/products/${product.slug}`}
       className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow block group"
     >
       {/* Product Image */}
-      {product.images && product.images[0] && (
+      {product.images && product.images[0] ? (
         <div className="mb-4">
           <ImageContainer
             src={product.images[0].src}
@@ -23,15 +38,32 @@ export default function ProductCard({ product }: ProductCardProps) {
             containerClassName="aspect-square relative bg-gray-100 rounded-md overflow-hidden"
           />
         </div>
+      ) : (
+        /* Fallback icon when no image */
+        <div className="mb-4 aspect-square relative bg-gray-100 rounded-md flex items-center justify-center">
+          <Icon 
+            name={getProductIcon(product)} 
+            size="2xl" 
+            className="text-gray-400 group-hover:text-bapi-blue transition-colors" 
+          />
+        </div>
       )}
 
       {/* Product Info */}
       <div className="space-y-2">
-        <h3 className="font-semibold text-gray-900 line-clamp-2 leading-tight group-hover:text-bapi-blue transition-colors">
-          {product.name}
-        </h3>
+        <div className="flex items-start justify-between gap-2">
+          <h3 className="font-semibold text-gray-900 line-clamp-2 leading-tight group-hover:text-bapi-blue transition-colors flex-1">
+            {product.name}
+          </h3>
+          <Icon 
+            name={getProductIcon(product)} 
+            size="sm" 
+            className="text-gray-400 mt-1 flex-shrink-0" 
+          />
+        </div>
         
-        <p className="text-sm text-gray-500">
+        <p className="text-sm text-gray-500 flex items-center gap-1">
+          <Icon name="document" size="xs" />
           SKU: {product.sku}
         </p>
 
@@ -40,11 +72,13 @@ export default function ProductCard({ product }: ProductCardProps) {
             ${product.price}
           </p>
           
-          {/* Stock Status */}
-          <div className="flex items-center space-x-1">
-            <div className={`w-2 h-2 rounded-full ${
-              product.stock_status === 'instock' ? 'bg-green-500' : 'bg-red-500'
-            }`}></div>
+          {/* Stock Status with Icon */}
+          <div className="flex items-center gap-1">
+            <Icon 
+              name={product.stock_status === 'instock' ? 'success' : 'error'} 
+              size="xs" 
+              className={product.stock_status === 'instock' ? 'text-green-500' : 'text-red-500'} 
+            />
             <span className={`text-xs font-medium ${
               product.stock_status === 'instock' ? 'text-green-700' : 'text-red-700'
             }`}>
@@ -53,10 +87,11 @@ export default function ProductCard({ product }: ProductCardProps) {
           </div>
         </div>
 
-        {/* Categories */}
+        {/* Categories with Icon */}
         {product.categories && product.categories.length > 0 && (
           <div className="pt-2">
-            <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
+            <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full flex items-center gap-1 w-fit">
+              <Icon name="settings" size="xs" />
               {product.categories[0].name}
             </span>
           </div>
