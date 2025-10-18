@@ -4,15 +4,15 @@
  */
 
 import {
-  WordPressPostSchema,
+  // WordPressPostSchema, // unused
   WordPressPostsSchema,
-  WordPressPageSchema,
+  // WordPressPageSchema, // unused
   WordPressPagesSchema,
   WooCommerceProductSchema,
   WooCommerceProductsSchema,
   type WordPressPost,
   type WooCommerceProduct,
-  EnvSchema,
+  // EnvSchema, // unused
 } from '@/types/schemas';
 
 const WORDPRESS_API_URL =
