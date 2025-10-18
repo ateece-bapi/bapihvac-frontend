@@ -2,27 +2,18 @@
  * TypeScript type definitions for WordPress REST API
  */
 
-export interface WordPressPost {
-  id: number;
-  date: string;
-  slug: string;
-  status: string;
-  type: string;
-  link: string;
-  title: {
-    rendered: string;
-  };
-  content: {
-    rendered: string;
-  };
-  excerpt: {
-    rendered: string;
-  };
-  author: number;
-  featured_media: number;
-  categories: number[];
-  tags: number[];
-}
+// Re-export Zod inferred types for convenience
+export type { 
+  WooCommerceProduct,
+  WordPressPost,
+  WordPressPage,
+  WooCommerceProductImage,
+  WooCommerceProductCategory,
+  WooCommerceProductTag,
+  WooCommerceProductAttribute,
+  WooCommerceProductVariation,
+  WooCommerceProductMetaData
+} from './schemas';
 
 export interface WordPressPage {
   id: number;
