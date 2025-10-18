@@ -1,20 +1,38 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
-@layer base {
-  * {
-    box-sizing: border-box;
-  }
+/* BAPI Brand Colors - Tailwind v4 CSS-based configuration */
+@theme {
+  --color-bapi-blue: #0066cc;
+  --color-bapi-blue-dark: #004499;
+  --color-bapi-blue-light: #3388dd;
   
-  html,
-  body {
-    @apply font-sans text-gray-900 bg-white;
-    max-width: 100vw;
-    overflow-x: hidden;
-  }
+  --font-family-sans: ui-sans-serif, system-ui, sans-serif;
+}
 
-  a {
-    @apply text-inherit no-underline;
-  }
+/* Custom utilities */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Base styles */
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  color: rgb(17 24 39); /* text-gray-900 */
+  background-color: white;
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
 }
