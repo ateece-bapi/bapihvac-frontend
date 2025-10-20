@@ -44,6 +44,12 @@ export async function fetchAPI(endpoint: string, options: FetchOptions = {}) {
     const data = await response.json();
     return data;
   } catch (error: unknown) {
+    // Enhanced error logging for debugging
+    console.error('[WordPress API] fetch failed:', {
+      url,
+      options,
+      error,
+    });
     // Handle specific header overflow errors
     const errorAny = error as Record<string, unknown>;
     if (errorAny?.code === 'UND_ERR_HEADERS_OVERFLOW' || 
@@ -140,7 +146,7 @@ function getMockProducts(): WooCommerceProduct[] {
       tax_status: "taxable" as const,
       tax_class: "",
       manage_stock: false,
-      stock_quantity: null,
+  stock_quantity: null,
       stock_status: "instock" as const,
       backorders: "no" as const,
       backorders_allowed: false,
@@ -167,7 +173,7 @@ function getMockProducts(): WooCommerceProduct[] {
       tags: [],
       images: [{
         id: 1,
-        src: "https://via.placeholder.com/300x200/0066cc/ffffff?text=BAPI+Sensor",
+        src: "https://placehold.co/300x200/0066cc/ffffff?text=BAPI+Sensor",
         alt: "Temperature Sensor TS-101"
       }],
       attributes: [],
@@ -204,7 +210,7 @@ function getMockProducts(): WooCommerceProduct[] {
       tax_status: "taxable" as const,
       tax_class: "",
       manage_stock: false,
-      stock_quantity: null,
+  stock_quantity: null,
       stock_status: "instock" as const,
       backorders: "no" as const,
       backorders_allowed: false,
@@ -231,7 +237,7 @@ function getMockProducts(): WooCommerceProduct[] {
       tags: [],
       images: [{
         id: 2,
-        src: "https://via.placeholder.com/300x200/0066cc/ffffff?text=BAPI+Humidity",
+        src: "https://placehold.co/300x200/0066cc/ffffff?text=BAPI+Humidity",
         alt: "Humidity Sensor HS-202"
       }],
       attributes: [],
@@ -268,7 +274,7 @@ function getMockProducts(): WooCommerceProduct[] {
       tax_status: "taxable" as const,
       tax_class: "",
       manage_stock: false,
-      stock_quantity: null,
+  stock_quantity: null,
       stock_status: "instock" as const,
       backorders: "no" as const,
       backorders_allowed: false,
@@ -295,7 +301,7 @@ function getMockProducts(): WooCommerceProduct[] {
       tags: [],
       images: [{
         id: 3,
-        src: "https://via.placeholder.com/300x200/0066cc/ffffff?text=BAPI+Pressure",
+        src: "https://placehold.co/300x200/0066cc/ffffff?text=BAPI+Pressure",
         alt: "Pressure Transmitter PT-303"
       }],
       attributes: [],
