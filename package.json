@@ -8,8 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "test": "jest",
-    "format": "prettier --write .",
-    "prepare": "husky install"
+  "format": "prettier --write ."
   },
   "dependencies": {
     "@tailwindcss/postcss": "^4.1.14",
