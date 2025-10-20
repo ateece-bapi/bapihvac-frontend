@@ -21,3 +21,12 @@ cp .env.example .env.local
 
 # Run development server
 pnpm run dev
+
+## 🛡️ Git Hooks (Husky)
+
+If you want to enable pre-commit hooks locally, run:
+
+```bash
+pnpm husky install
+```
+This is not required in CI and is only needed for local development.
