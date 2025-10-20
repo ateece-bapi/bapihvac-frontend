@@ -17,5 +17,5 @@ jobs:
       - run: corepack enable pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm run lint
-      - run: pnpm run format -- --check
+      - run: pnpm run format:check
       - run: pnpm run test
