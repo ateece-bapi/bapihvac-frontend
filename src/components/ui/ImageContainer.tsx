@@ -26,6 +26,7 @@ export default function ImageContainer({
         sizes={sizes}
         className={className}
         priority={priority}
+        unoptimized
       />
     </div>
   );

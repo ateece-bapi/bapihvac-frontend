@@ -4,15 +4,12 @@
  */
 
 import {
-  // WordPressPostSchema, // unused
   WordPressPostsSchema,
-  // WordPressPageSchema, // unused
   WordPressPagesSchema,
   WooCommerceProductSchema,
   WooCommerceProductsSchema,
   type WordPressPost,
   type WooCommerceProduct,
-  // EnvSchema, // unused
 } from '@/types/schemas';
 
 const WORDPRESS_API_URL =
@@ -28,11 +25,20 @@ export async function fetchAPI(endpoint: string, options: FetchOptions = {}) {
   const url = `${WORDPRESS_API_URL}${endpoint}`;
 
   try {
+    // Only include valid string headers to prevent overflow errors
+    const safeHeaders: Record<string, string> = {};
+    if (options.headers && typeof options.headers === 'object') {
+      for (const [key, value] of Object.entries(options.headers)) {
+        if (typeof value === 'string') {
+          safeHeaders[key] = value;
+        }
+      }
+    }
     const response = await fetch(url, {
       ...options,
       headers: {
         'Content-Type': 'application/json',
-        ...(options.headers || {}),
+        ...safeHeaders,
       },
     });
 
@@ -70,59 +76,47 @@ export async function fetchAPI(endpoint: string, options: FetchOptions = {}) {
   }
 }
 
-// Get all posts with validation
+
 export async function getPosts(): Promise<WordPressPost[]> {
   const data = await fetchAPI('/wp/v2/posts');
   const result = WordPressPostsSchema.safeParse(data);
-  
   if (!result.success) {
     console.error('WordPress Posts validation failed:', result.error.issues);
     throw new Error('Invalid posts data received from WordPress API');
   }
-  
   return result.data;
 }
 
-// Get a single post by slug with validation
 export async function getPostBySlug(slug: string): Promise<WordPressPost | null> {
   const data = await fetchAPI(`/wp/v2/posts?slug=${slug}`);
   const result = WordPressPostsSchema.safeParse(data);
-  
   if (!result.success) {
     console.error('WordPress Post validation failed:', result.error.issues);
     throw new Error('Invalid post data received from WordPress API');
   }
-  
   return result.data[0] || null;
 }
 
-// Get all pages with validation
 export async function getPages() {
   const data = await fetchAPI('/wp/v2/pages');
   const result = WordPressPagesSchema.safeParse(data);
-  
   if (!result.success) {
     console.error('WordPress Pages validation failed:', result.error.issues);
     throw new Error('Invalid pages data received from WordPress API');
   }
-  
   return result.data;
 }
 
-// Get a single page by slug with validation
 export async function getPageBySlug(slug: string) {
   const data = await fetchAPI(`/wp/v2/pages?slug=${slug}`);
   const result = WordPressPagesSchema.safeParse(data);
-  
   if (!result.success) {
     console.error('WordPress Page validation failed:', result.error.issues);
     throw new Error('Invalid page data received from WordPress API');
   }
-  
   return result.data[0] || null;
 }
 
-// Mock data for development when WooCommerce API is not available
 function getMockProducts(): WooCommerceProduct[] {
   const mockData = [
     {
@@ -152,7 +146,7 @@ function getMockProducts(): WooCommerceProduct[] {
       tax_status: "taxable" as const,
       tax_class: "",
       manage_stock: false,
-  stock_quantity: null,
+      stock_quantity: null,
       stock_status: "instock" as const,
       backorders: "no" as const,
       backorders_allowed: false,
@@ -169,8 +163,6 @@ function getMockProducts(): WooCommerceProduct[] {
       related_ids: [],
       upsell_ids: [],
       cross_sell_ids: [],
-    // ...existing code...
-    // Removed duplicate properties below
       parent_id: 0,
       purchase_note: "",
       categories: [{
@@ -218,7 +210,7 @@ function getMockProducts(): WooCommerceProduct[] {
       tax_status: "taxable" as const,
       tax_class: "",
       manage_stock: false,
-  stock_quantity: null,
+      stock_quantity: null,
       stock_status: "instock" as const,
       backorders: "no" as const,
       backorders_allowed: false,
@@ -263,15 +255,11 @@ function getMockProducts(): WooCommerceProduct[] {
     console.error('Mock products validation failed:', result.error.issues);
     throw new Error('Invalid mock product data');
   }
-  
   return result.data;
 }
 
-// Convert WordPress posts to product format (fallback)
-// Convert WordPress posts to WooCommerce product format with validation
 function convertPostsToProducts(posts: unknown[]): WooCommerceProduct[] {
   const convertedProducts = posts.map((postData, index) => {
-    // Safely cast to a partial post object
     const post = postData as {
       id?: number;
       title?: { rendered?: string };
@@ -284,7 +272,6 @@ function convertPostsToProducts(posts: unknown[]): WooCommerceProduct[] {
       content?: { rendered?: string };
       excerpt?: { rendered?: string };
     };
-
     const product = {
       id: post.id || index + 1,
       name: post.title?.rendered || `Product ${index + 1}`,
@@ -354,64 +341,49 @@ function convertPostsToProducts(posts: unknown[]): WooCommerceProduct[] {
       post_password: "",
       global_unique_id: ""
     };
-
-    // Validate the converted product
     const result = WooCommerceProductSchema.safeParse(product);
     if (result.success) {
       return result.data;
     } else {
       console.warn(`Product conversion validation failed for post ${post.id || index}:`, result.error.issues);
-      // Return a default valid product on validation failure
-      return getMockProducts()[0]; // Return first mock product as fallback
+      return getMockProducts()[0];
     }
   });
-
   return convertedProducts;
 }
 
-// WooCommerce - Get all products with validation
 export async function getProducts(): Promise<WooCommerceProduct[]> {
   const useMock = process.env.USE_MOCK_PRODUCTS === 'true';
   const consumerKey = process.env.WOOCOMMERCE_CONSUMER_KEY;
   const consumerSecret = process.env.WOOCOMMERCE_CONSUMER_SECRET;
-
   if (useMock) {
     console.warn('USE_MOCK_PRODUCTS is true, returning mock data');
     return getMockProducts();
   }
-
   if (!consumerKey || !consumerSecret) {
     console.warn('WooCommerce API keys not configured, returning mock data');
     return getMockProducts();
   }
-
-  // First try: Direct WooCommerce API with URL parameters
   try {
     const params = new URLSearchParams({
       consumer_key: consumerKey,
       consumer_secret: consumerSecret,
-      per_page: '10', // Limit to reduce response size
+      per_page: '10',
     });
-
     const data = await fetchAPI(`/wc/v3/products?${params.toString()}`);
     const result = WooCommerceProductsSchema.safeParse(data);
-    
     if (!result.success) {
       console.warn('WooCommerce Products validation failed:', result.error.issues);
       console.warn('Falling back to mock data due to validation errors');
       return getMockProducts();
     }
-    
     return result.data;
   } catch (error) {
     console.warn('WooCommerce API failed, trying WordPress posts as fallback:', error);
-    
-    // Second try: Use WordPress posts with product category
     try {
-  // NOTE: Replace 123 with your actual numeric category ID for products
-  const PRODUCT_CATEGORY_ID = process.env.WORDPRESS_PRODUCT_CATEGORY_ID || '123';
-  const posts = await fetchAPI(`/wp/v2/posts?categories=${PRODUCT_CATEGORY_ID}&per_page=10`);
-  return convertPostsToProducts(posts);
+      const PRODUCT_CATEGORY_ID = process.env.WORDPRESS_PRODUCT_CATEGORY_ID || '123';
+      const posts = await fetchAPI(`/wp/v2/posts?categories=${PRODUCT_CATEGORY_ID}&per_page=10`);
+      return convertPostsToProducts(posts);
     } catch (fallbackError) {
       console.error('All API attempts failed, using mock data:', fallbackError);
       return getMockProducts();
@@ -419,34 +391,26 @@ export async function getProducts(): Promise<WooCommerceProduct[]> {
   }
 }
 
-// WooCommerce - Get a single product by ID with validation
 export async function getProduct(id: number): Promise<WooCommerceProduct | null> {
   const consumerKey = process.env.WOOCOMMERCE_CONSUMER_KEY;
   const consumerSecret = process.env.WOOCOMMERCE_CONSUMER_SECRET;
-
   if (!consumerKey || !consumerSecret) {
     console.warn('WooCommerce API keys not configured, returning mock data');
     const mockProducts = getMockProducts();
     return mockProducts.find(p => p.id === id) || mockProducts[0] || null;
   }
-
   try {
-    // Use URL parameters instead of Basic auth to avoid header issues
     const params = new URLSearchParams({
       consumer_key: consumerKey,
       consumer_secret: consumerSecret,
     });
-
     const data = await fetchAPI(`/wc/v3/products/${id}?${params.toString()}`);
     const result = WooCommerceProductSchema.safeParse(data);
-    
     if (!result.success) {
       console.warn('WooCommerce Product validation failed:', result.error.issues);
-      // Fallback to mock data
       const mockProducts = getMockProducts();
       return mockProducts.find(p => p.id === id) || mockProducts[0] || null;
     }
-    
     return result.data;
   } catch (error) {
     console.error('WooCommerce API failed, falling back to mock data:', error);
@@ -455,38 +419,30 @@ export async function getProduct(id: number): Promise<WooCommerceProduct | null>
   }
 }
 
-// WooCommerce - Get single product by slug with validation
 export async function getProductBySlug(slug: string): Promise<WooCommerceProduct | null> {
   const consumerKey = process.env.WOOCOMMERCE_CONSUMER_KEY;
   const consumerSecret = process.env.WOOCOMMERCE_CONSUMER_SECRET;
-
   if (!consumerKey || !consumerSecret) {
     console.warn('WooCommerce API keys not configured, searching mock data');
     const mockProducts = getMockProducts();
     return mockProducts.find(product => product.slug === slug) || null;
   }
-
   try {
     const params = new URLSearchParams({
       consumer_key: consumerKey,
       consumer_secret: consumerSecret,
       slug: slug,
     });
-
     const data = await fetchAPI(`/wc/v3/products?${params.toString()}`);
     const result = WooCommerceProductsSchema.safeParse(data);
-    
     if (!result.success) {
       console.warn('WooCommerce Product validation failed:', result.error.issues);
-      // Fallback to mock data
       const mockProducts = getMockProducts();
       return mockProducts.find(product => product.slug === slug) || null;
     }
-    
     return result.data[0] || null;
   } catch (error) {
     console.error('Error fetching product:', error);
-    // Fallback to mock data
     const mockProducts = getMockProducts();
     return mockProducts.find(product => product.slug === slug) || null;
   }

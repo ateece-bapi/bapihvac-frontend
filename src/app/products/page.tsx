@@ -1,6 +1,6 @@
 "use client";
 
-import { getProducts } from '@/lib/wordpress';
+import { getProducts } from '@/lib/wpapi';
 import { ProductGrid } from '@/components/products';
 
 import React, { useEffect, useState, useMemo } from 'react';

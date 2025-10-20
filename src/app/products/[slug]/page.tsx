@@ -1,4 +1,4 @@
-import { getProducts } from '@/lib/wordpress';
+import { getProducts } from '@/lib/wpapi';
 import { notFound } from 'next/navigation';
 import { ProductDetails, ProductDescription } from '@/components/products';
 import { ErrorDisplay, BackLink } from '@/components/ui';
