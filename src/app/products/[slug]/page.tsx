@@ -12,9 +12,10 @@ interface ProductPageProps {
 
 export default async function ProductPage({ params }: ProductPageProps) {
   try {
-    // Get all products first, then find by slug
+    // Next.js 15+ requires awaiting params for dynamic routes
+    const { slug } = await params;
     const products = await getProducts();
-    const product = products.find((p: WooCommerceProduct) => p.slug === params.slug);
+    const product = products.find((p: WooCommerceProduct) => p.slug === slug);
 
     if (!product) {
       notFound();
@@ -23,14 +24,8 @@ export default async function ProductPage({ params }: ProductPageProps) {
     return (
       <main className="max-w-7xl mx-auto p-8">
         <ProductDetails product={product} />
-        
-        <ProductDescription 
-          description={product.description} 
-        />
-
-        <BackLink href="/products">
-          Back to Products
-        </BackLink>
+        <ProductDescription description={product.description} />
+        <BackLink href="/products">Back to Products</BackLink>
       </main>
     );
   } catch (error) {
