@@ -75,6 +75,48 @@ export default function Home() {
           </button>
         </div>
       </div>
+
+      {/* Admin Tools & Content Audit */}
+      <div className="bg-white border border-bapi-blue/20 rounded-lg p-6 shadow-sm mt-12">
+        <h3 className="text-lg font-semibold mb-4 text-bapi-blue flex items-center">
+          🛠️ Admin Tools & Content Audit
+        </h3>
+        <p className="text-gray-600 mb-4">
+          Access WordPress content structure, audit utilities, and admin tools for
+          developers and content editors.
+        </p>
+        <a
+          href="/wp-audit"
+          className="inline-block bg-bapi-blue text-white px-4 py-2 rounded-md hover:bg-bapi-blue-dark transition-colors"
+        >
+          Open Content Audit
+        </a>
+      </div>
+
+      {/* Recent Updates / Changelog */}
+      <div className="bg-gray-50 border border-gray-200 rounded-lg p-6 mt-8">
+        <h3 className="text-lg font-semibold mb-4 text-bapi-blue flex items-center">
+          📝 Recent Updates & Changelog
+        </h3>
+        <ul className="text-gray-700 list-disc pl-6 space-y-2 text-sm">
+          <li>
+            <b>2025-10-21:</b> CI/CD now enforces Prettier and ESLint. All audit
+            utilities type-safe. Deprecated fields audit page removed.
+          </li>
+          <li>
+            <b>2025-10-20:</b> Product/category audit, Zod schemas, and error
+            handling refactor complete.
+          </li>
+          <li>
+            <b>2025-10-18:</b> WooCommerce API integration, mock/live data
+            toggle, and product grid UI finalized.
+          </li>
+          <li>
+            <b>2025-10-15:</b> Project initialized with Next.js 14, Tailwind,
+            Zustand, and React Query.
+          </li>
+        </ul>
+      </div>
     </main>
   );
 }
