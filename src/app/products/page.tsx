@@ -1,4 +1,5 @@
 "use client";
+"use client";
 
 import { getProducts } from '@/lib/wpapi';
 import { ProductGrid } from '@/components/products';
@@ -33,8 +34,12 @@ export default function ProductsPage() {
           });
         });
         setCategories(Array.from(categoryMap.values()));
-      } catch (err: any) {
-        setError(err?.message || 'Unknown error');
+      } catch (err: unknown) {
+        if (typeof err === 'object' && err !== null && 'message' in err) {
+          setError(String((err as { message?: string }).message));
+        } else {
+          setError('Unknown error');
+        }
       }
     })();
   }, []);
