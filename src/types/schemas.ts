@@ -1,3 +1,96 @@
+// WordPress Media/Attachment Schema
+export const WordPressMediaSchema = z.object({
+  id: z.number(),
+  date: z.string(),
+  date_gmt: z.string(),
+  guid: z.object({ rendered: z.string() }),
+  modified: z.string(),
+  modified_gmt: z.string(),
+  slug: z.string(),
+  status: z.string(),
+  type: z.string(),
+  link: z.string(),
+  title: z.object({ rendered: z.string() }),
+  author: z.number(),
+  comment_status: z.string(),
+  ping_status: z.string(),
+  template: z.string().optional(),
+  meta: z.record(z.string(), z.unknown()).optional(),
+  description: z.object({ rendered: z.string() }),
+  caption: z.object({ rendered: z.string() }),
+  alt_text: z.string(),
+  media_type: z.string(),
+  mime_type: z.string(),
+  media_details: z.record(z.string(), z.unknown()),
+  post: z.number().nullable().optional(),
+  source_url: z.string(),
+  _links: z.record(z.string(), z.unknown()),
+});
+
+export const WordPressMediaArraySchema = z.array(WordPressMediaSchema);
+export type WordPressMedia = z.infer<typeof WordPressMediaSchema>;
+
+// WordPress User/Author Schema
+export const WordPressUserSchema = z.object({
+  id: z.number(),
+  name: z.string(),
+  url: z.string(),
+  description: z.string(),
+  link: z.string(),
+  slug: z.string(),
+  avatar_urls: z.record(z.string(), z.string()),
+  meta: z.record(z.string(), z.unknown()).optional(),
+  acf: z.unknown().optional(),
+  yoast_head_json: z.unknown().optional(),
+  is_super_admin: z.boolean().optional(),
+  _links: z.record(z.string(), z.unknown()),
+});
+
+export const WordPressUserArraySchema = z.array(WordPressUserSchema);
+export type WordPressUser = z.infer<typeof WordPressUserSchema>;
+
+// WordPress Taxonomy (Category/Tag) Schema
+export const WordPressTaxonomySchema = z.object({
+  id: z.number(),
+  count: z.number(),
+  description: z.string(),
+  link: z.string(),
+  name: z.string(),
+  slug: z.string(),
+  taxonomy: z.string(),
+  parent: z.number().optional(),
+  meta: z.array(z.unknown()).optional(),
+  acf: z.unknown().optional(),
+  yoast_head: z.string().optional(),
+  yoast_head_json: z.unknown().optional(),
+  _links: z.record(z.string(), z.unknown()),
+});
+
+export const WordPressTaxonomyArraySchema = z.array(WordPressTaxonomySchema);
+export type WordPressTaxonomy = z.infer<typeof WordPressTaxonomySchema>;
+
+// WordPress Comment Schema
+export const WordPressCommentSchema = z.object({
+  id: z.number(),
+  post: z.number(),
+  parent: z.number(),
+  author: z.number(),
+  author_name: z.string(),
+  author_email: z.string(),
+  date: z.string(),
+  date_gmt: z.string(),
+  content: z.object({ rendered: z.string() }),
+  link: z.string(),
+  status: z.string(),
+  type: z.string(),
+  author_url: z.string().optional(),
+  author_ip: z.string().optional(),
+  meta: z.record(z.string(), z.unknown()).optional(),
+  _links: z.record(z.string(), z.unknown()),
+});
+
+export const WordPressCommentArraySchema = z.array(WordPressCommentSchema);
+export type WordPressComment = z.infer<typeof WordPressCommentSchema>;
 import { z } from 'zod';
 
 /**

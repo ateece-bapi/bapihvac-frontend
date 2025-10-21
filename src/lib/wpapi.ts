@@ -8,9 +8,72 @@ import {
   WordPressPagesSchema,
   WooCommerceProductSchema,
   WooCommerceProductsSchema,
+  WordPressMediaArraySchema,
+  WordPressUserArraySchema,
+  WordPressTaxonomyArraySchema,
+  WordPressCommentArraySchema,
   type WordPressPost,
   type WooCommerceProduct,
+  type WordPressMedia,
+  type WordPressUser,
+  type WordPressTaxonomy,
+  type WordPressComment,
 } from '@/types/schemas';
+
+// Fetch and validate WordPress media/attachments
+export async function getMedia(): Promise<WordPressMedia[]> {
+  const data = await fetchAPI('/wp/v2/media');
+  const result = WordPressMediaArraySchema.safeParse(data);
+  if (!result.success) {
+    console.error('WordPress Media validation failed:', result.error.issues);
+    throw new Error('Invalid media data received from WordPress API');
+  }
+  return result.data;
+}
+
+// Fetch and validate WordPress users/authors
+export async function getUsers(): Promise<WordPressUser[]> {
+  const data = await fetchAPI('/wp/v2/users');
+  const result = WordPressUserArraySchema.safeParse(data);
+  if (!result.success) {
+    console.error('WordPress Users validation failed:', result.error.issues);
+    throw new Error('Invalid users data received from WordPress API');
+  }
+  return result.data;
+}
+
+// Fetch and validate WordPress categories (taxonomy)
+export async function getCategories(): Promise<WordPressTaxonomy[]> {
+  const data = await fetchAPI('/wp/v2/categories');
+  const result = WordPressTaxonomyArraySchema.safeParse(data);
+  if (!result.success) {
+    console.error('WordPress Categories validation failed:', result.error.issues);
+    throw new Error('Invalid categories data received from WordPress API');
+  }
+  return result.data;
+}
+
+// Fetch and validate WordPress tags (taxonomy)
+export async function getTags(): Promise<WordPressTaxonomy[]> {
+  const data = await fetchAPI('/wp/v2/tags');
+  const result = WordPressTaxonomyArraySchema.safeParse(data);
+  if (!result.success) {
+    console.error('WordPress Tags validation failed:', result.error.issues);
+    throw new Error('Invalid tags data received from WordPress API');
+  }
+  return result.data;
+}
+
+// Fetch and validate WordPress comments
+export async function getComments(): Promise<WordPressComment[]> {
+  const data = await fetchAPI('/wp/v2/comments');
+  const result = WordPressCommentArraySchema.safeParse(data);
+  if (!result.success) {
+    console.error('WordPress Comments validation failed:', result.error.issues);
+    throw new Error('Invalid comments data received from WordPress API');
+  }
+  return result.data;
+}
 
 const WORDPRESS_API_URL =
   process.env.NEXT_PUBLIC_WORDPRESS_API_URL ||
