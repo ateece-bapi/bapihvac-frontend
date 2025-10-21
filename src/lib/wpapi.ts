@@ -88,7 +88,19 @@ interface FetchOptions {
 }
 
 export async function fetchAPI(endpoint: string, options: FetchOptions = {}) {
-  const url = `${WORDPRESS_API_URL}${endpoint}`;
+  // Use the proxy only in production (Vercel), direct API in local/dev
+  const targetUrl = `${WORDPRESS_API_URL}${endpoint}`;
+  let url: string;
+  if (typeof window === 'undefined' && process.env.VERCEL_URL) {
+    // On Vercel, use absolute proxy URL
+    url = `https://${process.env.VERCEL_URL}/api/wp-proxy?url=${encodeURIComponent(targetUrl)}`;
+  } else if (typeof window !== 'undefined') {
+    // Client-side: relative proxy URL
+    url = `/api/wp-proxy?url=${encodeURIComponent(targetUrl)}`;
+  } else {
+    // Local/dev SSR/build: use direct API URL
+    url = targetUrl;
+  }
 
   try {
     // Only include minimal headers to prevent overflow errors
