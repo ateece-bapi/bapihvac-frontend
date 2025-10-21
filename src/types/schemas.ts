@@ -1,3 +1,96 @@
+// WordPress Media/Attachment Schema
+export const WordPressMediaSchema = z.object({
+  id: z.number(),
+  date: z.string(),
+  date_gmt: z.string(),
+  guid: z.object({ rendered: z.string() }),
+  modified: z.string(),
+  modified_gmt: z.string(),
+  slug: z.string(),
+  status: z.string(),
+  type: z.string(),
+  link: z.string(),
+  title: z.object({ rendered: z.string() }),
+  author: z.number(),
+  comment_status: z.string(),
+  ping_status: z.string(),
+  template: z.string().optional(),
+  meta: z.record(z.string(), z.unknown()).optional(),
+  description: z.object({ rendered: z.string() }),
+  caption: z.object({ rendered: z.string() }),
+  alt_text: z.string(),
+  media_type: z.string(),
+  mime_type: z.string(),
+  media_details: z.record(z.string(), z.unknown()),
+  post: z.number().nullable().optional(),
+  source_url: z.string(),
+  _links: z.record(z.string(), z.unknown()),
+});
+
+export const WordPressMediaArraySchema = z.array(WordPressMediaSchema);
+export type WordPressMedia = z.infer<typeof WordPressMediaSchema>;
+
+// WordPress User/Author Schema
+export const WordPressUserSchema = z.object({
+  id: z.number(),
+  name: z.string(),
+  url: z.string(),
+  description: z.string(),
+  link: z.string(),
+  slug: z.string(),
+  avatar_urls: z.record(z.string(), z.string()),
+  meta: z.record(z.string(), z.unknown()).optional(),
+  acf: z.unknown().optional(),
+  yoast_head_json: z.unknown().optional(),
+  is_super_admin: z.boolean().optional(),
+  _links: z.record(z.string(), z.unknown()),
+});
+
+export const WordPressUserArraySchema = z.array(WordPressUserSchema);
+export type WordPressUser = z.infer<typeof WordPressUserSchema>;
+
+// WordPress Taxonomy (Category/Tag) Schema
+export const WordPressTaxonomySchema = z.object({
+  id: z.number(),
+  count: z.number(),
+  description: z.string(),
+  link: z.string(),
+  name: z.string(),
+  slug: z.string(),
+  taxonomy: z.string(),
+  parent: z.number().optional(),
+  meta: z.array(z.unknown()).optional(),
+  acf: z.unknown().optional(),
+  yoast_head: z.string().optional(),
+  yoast_head_json: z.unknown().optional(),
+  _links: z.record(z.string(), z.unknown()),
+});
+
+export const WordPressTaxonomyArraySchema = z.array(WordPressTaxonomySchema);
+export type WordPressTaxonomy = z.infer<typeof WordPressTaxonomySchema>;
+
+// WordPress Comment Schema
+export const WordPressCommentSchema = z.object({
+  id: z.number(),
+  post: z.number(),
+  parent: z.number(),
+  author: z.number(),
+  author_name: z.string(),
+  author_email: z.string(),
+  date: z.string(),
+  date_gmt: z.string(),
+  content: z.object({ rendered: z.string() }),
+  link: z.string(),
+  status: z.string(),
+  type: z.string(),
+  author_url: z.string().optional(),
+  author_ip: z.string().optional(),
+  meta: z.record(z.string(), z.unknown()).optional(),
+  _links: z.record(z.string(), z.unknown()),
+});
+
+export const WordPressCommentArraySchema = z.array(WordPressCommentSchema);
+export type WordPressComment = z.infer<typeof WordPressCommentSchema>;
 import { z } from 'zod';
 
 /**
@@ -20,9 +113,11 @@ export const WordPressPostSchema = z.object({
   id: z.number(),
   date: z.string(),
   date_gmt: z.string().optional(),
-  guid: z.object({
-    rendered: z.string(),
-  }).optional(),
+  guid: z
+    .object({
+      rendered: z.string(),
+    })
+    .optional(),
   modified: z.string().optional(),
   modified_gmt: z.string().optional(),
   slug: z.string(),
@@ -49,9 +144,11 @@ export const WordPressPageSchema = z.object({
   id: z.number(),
   date: z.string(),
   date_gmt: z.string().optional(),
-  guid: z.object({
-    rendered: z.string(),
-  }).optional(),
+  guid: z
+    .object({
+      rendered: z.string(),
+    })
+    .optional(),
   modified: z.string().optional(),
   modified_gmt: z.string().optional(),
   slug: z.string(),
@@ -126,7 +223,9 @@ export const WooCommerceProductSchema = z.object({
   type: z.enum(['simple', 'grouped', 'external', 'variable']).default('simple'),
   status: z.enum(['draft', 'pending', 'private', 'publish']).default('publish'),
   featured: z.boolean().default(false),
-  catalog_visibility: z.enum(['visible', 'catalog', 'search', 'hidden']).default('visible'),
+  catalog_visibility: z
+    .enum(['visible', 'catalog', 'search', 'hidden'])
+    .default('visible'),
   description: z.string().default(''),
   short_description: z.string().default(''),
   sku: z.string().default(''),
@@ -149,7 +248,9 @@ export const WooCommerceProductSchema = z.object({
   tax_class: z.string().default(''),
   manage_stock: z.boolean().default(false),
   stock_quantity: z.number().nullable().optional(),
-  stock_status: z.enum(['instock', 'outofstock', 'onbackorder']).default('instock'),
+  stock_status: z
+    .enum(['instock', 'outofstock', 'onbackorder'])
+    .default('instock'),
   backorders: z.enum(['no', 'notify', 'yes']).default('no'),
   backorders_allowed: z.boolean().default(false),
   backordered: z.boolean().default(false),
@@ -172,19 +273,27 @@ export const WooCommerceProductSchema = z.object({
   tags: z.array(ProductTagSchema).default([]),
   images: z.array(ProductImageSchema).default([]),
   attributes: z.array(ProductAttributeSchema).default([]),
-  default_attributes: z.array(z.object({
-    id: z.number(),
-    name: z.string(),
-    option: z.string(),
-  })).default([]),
+  default_attributes: z
+    .array(
+      z.object({
+        id: z.number(),
+        name: z.string(),
+        option: z.string(),
+      })
+    )
+    .default([]),
   variations: z.array(z.number()).default([]),
   grouped_products: z.array(z.number()).default([]),
   menu_order: z.number().default(0),
-  meta_data: z.array(z.object({
-    id: z.number(),
-    key: z.string(),
-    value: z.unknown(),
-  })).default([]),
+  meta_data: z
+    .array(
+      z.object({
+        id: z.number(),
+        key: z.string(),
+        value: z.unknown(),
+      })
+    )
+    .default([]),
 });
 
 // Array schemas for API responses
@@ -202,8 +311,14 @@ export type ProductTag = z.infer<typeof ProductTagSchema>;
 
 // Environment Variables Schema
 export const EnvSchema = z.object({
-  NEXT_PUBLIC_WORDPRESS_API_URL: z.string().url().default('https://www.bapihvac.com/wp-json'),
-  WORDPRESS_API_URL: z.string().url().default('https://www.bapihvac.com/wp-json'),
+  NEXT_PUBLIC_WORDPRESS_API_URL: z
+    .string()
+    .url()
+    .default('https://www.bapihvac.com/wp-json'),
+  WORDPRESS_API_URL: z
+    .string()
+    .url()
+    .default('https://www.bapihvac.com/wp-json'),
   WOOCOMMERCE_CONSUMER_KEY: z.string().optional(),
   WOOCOMMERCE_CONSUMER_SECRET: z.string().optional(),
   WORDPRESS_AUTH_USERNAME: z.string().optional(),

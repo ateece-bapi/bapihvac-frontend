@@ -1,5 +1,5 @@
-import React from "react";
-import { Category, CategoryFilter } from "./CategoryFilter";
+import React from 'react';
+import { Category, CategoryFilter } from './CategoryFilter';
 
 export interface ProductFilterSidebarProps {
   categories: Category[];

@@ -7,7 +7,7 @@ export default function Home() {
           Next.js + TypeScript Headless WordPress Frontend
         </p>
       </div>
-      
+
       <div className="bg-gray-50 border border-gray-200 rounded-lg p-8 mb-8">
         <h2 className="text-2xl font-semibold mb-6 flex items-center">
           🚀 Project Status
@@ -46,24 +46,28 @@ export default function Home() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
-          <h3 className="text-lg font-semibold mb-4 text-bapi-blue">🛒 Products</h3>
+          <h3 className="text-lg font-semibold mb-4 text-bapi-blue">
+            🛒 Products
+          </h3>
           <p className="text-gray-600 mb-4">
             Browse our complete catalog of BAPI HVAC sensors and equipment.
           </p>
-          <a 
-            href="/products" 
+          <a
+            href="/products"
             className="inline-block bg-bapi-blue text-white px-4 py-2 rounded-md hover:bg-bapi-blue-dark transition-colors"
           >
             View Products
           </a>
         </div>
-        
+
         <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
-          <h3 className="text-lg font-semibold mb-4 text-bapi-blue">📊 Job Estimates</h3>
+          <h3 className="text-lg font-semibold mb-4 text-bapi-blue">
+            📊 Job Estimates
+          </h3>
           <p className="text-gray-600 mb-4">
             Get custom quotes for your HVAC projects and installations.
           </p>
-          <button 
+          <button
             className="inline-block bg-gray-300 text-gray-500 px-4 py-2 rounded-md cursor-not-allowed"
             disabled
           >

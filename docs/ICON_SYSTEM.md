@@ -5,11 +5,13 @@ A comprehensive, professional icon system built with Lucide React for the BAPI H
 ## 🎯 **Why This Icon System?**
 
 ### **Design Team Integration**
+
 - ✅ **Figma Plugin Available** - Designers can use the same icons in Figma
 - ✅ **Consistent Design Language** - 24x24px grid system, stroke-based
 - ✅ **Professional Grade** - Used by Vercel, Linear, and other top companies
 
-### **Developer Experience**  
+### **Developer Experience**
+
 - ✅ **TypeScript Native** - Full intellisense and type safety
 - ✅ **Tree-Shakable** - Only bundles icons you actually use
 - ✅ **ShadCN Compatible** - Perfect for future component libraries
@@ -18,6 +20,7 @@ A comprehensive, professional icon system built with Lucide React for the BAPI H
 ## 🔧 **Usage**
 
 ### **Basic Usage**
+
 ```tsx
 import { Icon } from '@/components/ui';
 
@@ -29,7 +32,7 @@ import { Icon } from '@/components/ui';
 
 // Size presets
 <Icon name="gauge" size="xs" />   // 12px
-<Icon name="wind" size="sm" />    // 16px  
+<Icon name="wind" size="sm" />    // 16px
 <Icon name="zap" size="md" />     // 20px (default: 24px)
 <Icon name="settings" size="lg" />   // 24px
 <Icon name="activity" size="xl" />   // 32px
@@ -37,17 +40,19 @@ import { Icon } from '@/components/ui';
 ```
 
 ### **Direct Import (Advanced)**
+
 ```tsx
 import { Thermometer, Gauge, Wind } from '@/components/ui/Icon';
 
-<Thermometer size={24} className="text-red-500" />
+<Thermometer size={24} className="text-red-500" />;
 ```
 
 ## 📚 **Available Icons**
 
 ### **HVAC Specific**
+
 - `thermometer` - Temperature sensors, thermal products
-- `gauge` - Pressure sensors, measurement devices  
+- `gauge` - Pressure sensors, measurement devices
 - `wind` - Airflow, ventilation products
 - `zap` - Electrical sensors, power monitoring
 - `activity` - Humidity, environmental monitoring
@@ -59,6 +64,7 @@ import { Thermometer, Gauge, Wind } from '@/components/ui/Icon';
 - `cable` - Cable and connectivity
 
 ### **Navigation & UI**
+
 - `menu` - Mobile menu toggle
 - `close` - Close buttons, dismiss actions
 - `search` - Search functionality
@@ -68,12 +74,14 @@ import { Thermometer, Gauge, Wind } from '@/components/ui/Icon';
 - `chevronDown`/`chevronUp` - Dropdowns
 
 ### **Status & Feedback**
+
 - `success` - Success states, in stock
-- `error` - Error states, out of stock  
+- `error` - Error states, out of stock
 - `warning` - Warning messages
 - `info` - Information display
 
 ### **Actions**
+
 - `plus`/`minus` - Add/remove actions
 - `edit` - Edit functionality
 - `delete` - Delete actions
@@ -83,8 +91,9 @@ import { Thermometer, Gauge, Wind } from '@/components/ui/Icon';
 - `show`/`hide` - Toggle visibility
 
 ### **Contact & Support**
+
 - `phone` - Phone contact
-- `email` - Email contact  
+- `email` - Email contact
 - `location` - Address, location
 - `calendar` - Scheduling, dates
 - `clock` - Time, hours
@@ -93,6 +102,7 @@ import { Thermometer, Gauge, Wind } from '@/components/ui/Icon';
 ## 🎨 **Design Guidelines**
 
 ### **HVAC Product Type Detection**
+
 The system automatically suggests appropriate icons based on product names:
 
 ```tsx
@@ -100,26 +110,28 @@ The system automatically suggests appropriate icons based on product names:
 const getProductIcon = (product: WooCommerceProduct) => {
   const name = product.name.toLowerCase();
   const category = product.categories?.[0]?.name?.toLowerCase() || '';
-  
+
   if (name.includes('sensor')) return 'sensor';
-  if (name.includes('transmitter')) return 'transmitter';  
+  if (name.includes('transmitter')) return 'transmitter';
   if (name.includes('temperature')) return 'thermometer';
   if (name.includes('pressure')) return 'gauge';
   if (name.includes('humidity')) return 'activity';
-  
+
   return 'sensor'; // Default
 };
 ```
 
 ### **Size Guidelines**
+
 - **xs (12px)** - Status indicators, badges
-- **sm (16px)** - Inline text icons, small buttons  
+- **sm (16px)** - Inline text icons, small buttons
 - **md (20px)** - Standard interface elements
 - **lg (24px)** - Primary navigation, main actions
 - **xl (32px)** - Feature highlights, empty states
 - **2xl (48px)** - Hero sections, large placeholders
 
 ### **Color Conventions**
+
 ```css
 /* BAPI Brand Colors */
 .text-bapi-blue      /* Primary actions, links */
@@ -132,12 +144,14 @@ const getProductIcon = (product: WooCommerceProduct) => {
 ## 🔄 **Figma Workflow**
 
 ### **For Designers:**
+
 1. Install the **Lucide** Figma plugin
 2. Use the same icon names as in our system
 3. Maintain 24x24px artboard for consistency
 4. Export with 2px stroke width (default)
 
 ### **For Developers:**
+
 1. Reference designer's icon choices
 2. Use matching icon names from our system
 3. Apply consistent sizing and colors
@@ -150,7 +164,7 @@ const getProductIcon = (product: WooCommerceProduct) => {
 ✅ **Design Consistency** - Single source of truth  
 ✅ **Scalability** - Easy to add new icons  
 ✅ **Maintainability** - Centralized configuration  
-✅ **Performance** - SVG-based, optimized rendering  
+✅ **Performance** - SVG-based, optimized rendering
 
 ---
 

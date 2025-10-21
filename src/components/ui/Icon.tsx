@@ -1,4 +1,4 @@
-import { 
+import {
   // Navigation & UI
   Menu,
   X,
@@ -11,7 +11,7 @@ import {
   ChevronDown,
   ChevronUp,
   ExternalLink,
-  
+
   // HVAC Specific
   Thermometer,
   Gauge,
@@ -25,7 +25,7 @@ import {
   CheckCircle,
   XCircle,
   Info,
-  
+
   // Product Categories
   Cpu,
   Radio,
@@ -33,7 +33,7 @@ import {
   Bluetooth,
   Usb,
   Cable,
-  
+
   // Actions
   Plus,
   Minus,
@@ -45,16 +45,15 @@ import {
   Copy,
   Eye,
   EyeOff,
-  
-  // Contact & Support  
+
+  // Contact & Support
   Phone,
   Mail,
   MapPin,
   Clock,
   Calendar,
   FileText,
-  
-  type LucideIcon
+  type LucideIcon,
 } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
@@ -73,7 +72,7 @@ export const icons = {
   chevronDown: ChevronDown,
   chevronUp: ChevronUp,
   externalLink: ExternalLink,
-  
+
   // HVAC Specific
   thermometer: Thermometer,
   gauge: Gauge,
@@ -87,7 +86,7 @@ export const icons = {
   success: CheckCircle,
   error: XCircle,
   info: Info,
-  
+
   // Product Categories
   sensor: Cpu,
   transmitter: Radio,
@@ -95,7 +94,7 @@ export const icons = {
   bluetooth: Bluetooth,
   wired: Usb,
   cable: Cable,
-  
+
   // Actions
   plus: Plus,
   minus: Minus,
@@ -107,7 +106,7 @@ export const icons = {
   copy: Copy,
   show: Eye,
   hide: EyeOff,
-  
+
   // Contact & Support
   phone: Phone,
   email: Mail,
@@ -128,26 +127,26 @@ interface IconProps {
 
 /**
  * Centralized Icon component for BAPI HVAC
- * 
+ *
  * Uses Lucide React icons with HVAC-specific naming
  * Provides consistent sizing and styling across the app
- * 
+ *
  * @example
  * <Icon name="thermometer" size={24} className="text-blue-600" />
  * <Icon name="sensor" size="lg" />
  */
-export function Icon({ 
-  name, 
-  size = 24, 
-  className, 
-  strokeWidth = 2 
+export function Icon({
+  name,
+  size = 24,
+  className,
+  strokeWidth = 2,
 }: IconProps) {
   const LucideIcon = icons[name] as LucideIcon;
-  
+
   // Handle size presets
   const getSize = (size: number | string) => {
     if (typeof size === 'number') return size;
-    
+
     const sizeMap = {
       xs: 12,
       sm: 16,
@@ -156,21 +155,21 @@ export function Icon({
       xl: 32,
       '2xl': 48,
     } as const;
-    
+
     return sizeMap[size as keyof typeof sizeMap] || 24;
   };
-  
+
   return (
     <LucideIcon
       size={getSize(size)}
       strokeWidth={strokeWidth}
-      className={cn("", className)}
+      className={cn('', className)}
     />
   );
 }
 
 // Export individual icons for direct use when needed
-export { 
+export {
   Menu,
   X,
   Search,

@@ -1,20 +1,30 @@
-"use client";
+'use client';
+'use client';
 
-import { getProducts } from '@/lib/wordpress';
+import { getProducts } from '@/lib/wpapi';
 import { ProductGrid } from '@/components/products';
 
 import React, { useEffect, useState, useMemo } from 'react';
 import { ErrorDisplay } from '@/components/ui';
 import { ProductFilterSidebar } from '@/components/filters/ProductFilterSidebar';
 import { useProductFilterStore } from '@/lib/zustand/productFilterStore';
-import type { WooCommerceProduct, WooCommerceProductCategory } from '@/types/wordpress';
+import type {
+  WooCommerceProduct,
+  WooCommerceProductCategory,
+} from '@/types/wordpress';
 
 export default function ProductsPage() {
   const [products, setProducts] = useState<WooCommerceProduct[]>([]);
-  const [categories, setCategories] = useState<WooCommerceProductCategory[]>([]);
+  const [categories, setCategories] = useState<WooCommerceProductCategory[]>(
+    []
+  );
   const [error, setError] = useState<string | null>(null);
-  const selectedCategoryIds = useProductFilterStore((s) => s.selectedCategoryIds);
-  const setSelectedCategoryIds = useProductFilterStore((s) => s.setSelectedCategoryIds);
+  const selectedCategoryIds = useProductFilterStore(
+    (s) => s.selectedCategoryIds
+  );
+  const setSelectedCategoryIds = useProductFilterStore(
+    (s) => s.setSelectedCategoryIds
+  );
 
   useEffect(() => {
     (async () => {
@@ -28,13 +38,21 @@ export default function ProductsPage() {
         plainProducts.forEach((product: WooCommerceProduct) => {
           product.categories?.forEach((cat: WooCommerceProductCategory) => {
             if (cat && cat.id && cat.name) {
-              categoryMap.set(String(cat.id), { id: cat.id, name: cat.name, slug: cat.slug });
+              categoryMap.set(String(cat.id), {
+                id: cat.id,
+                name: cat.name,
+                slug: cat.slug,
+              });
             }
           });
         });
         setCategories(Array.from(categoryMap.values()));
-      } catch (err: any) {
-        setError(err?.message || 'Unknown error');
+      } catch (err: unknown) {
+        if (typeof err === 'object' && err !== null && 'message' in err) {
+          setError(String((err as { message?: string }).message));
+        } else {
+          setError('Unknown error');
+        }
       }
     })();
   }, []);
@@ -42,7 +60,9 @@ export default function ProductsPage() {
   const filteredProducts = useMemo(() => {
     if (selectedCategoryIds.length === 0) return products;
     return products.filter((product) =>
-      product.categories?.some((cat) => selectedCategoryIds.includes(String(cat.id)))
+      product.categories?.some((cat) =>
+        selectedCategoryIds.includes(String(cat.id))
+      )
     );
   }, [products, selectedCategoryIds]);
 
@@ -60,13 +80,13 @@ export default function ProductsPage() {
         />
       </div>
       <div className="flex-1">
-        <ProductGrid 
-          products={filteredProducts} 
+        <ProductGrid
+          products={filteredProducts}
           title="BAPI HVAC Products"
           showCount={true}
         />
       </div>
     </main>
   );
-// ...existing code...
+  // ...existing code...
 }

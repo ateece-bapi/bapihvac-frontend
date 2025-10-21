@@ -1,4 +1,4 @@
-import { getProducts } from '@/lib/wordpress';
+import { getProducts } from '@/lib/wpapi';
 import { notFound } from 'next/navigation';
 import { ProductDetails, ProductDescription } from '@/components/products';
 import { ErrorDisplay, BackLink } from '@/components/ui';
@@ -30,7 +30,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
     );
   } catch (error) {
     return (
-      <ErrorDisplay 
+      <ErrorDisplay
         title="Error Loading Product"
         message={error instanceof Error ? error.message : 'Unknown error'}
       />

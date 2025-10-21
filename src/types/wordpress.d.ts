@@ -3,7 +3,7 @@
  */
 
 // Re-export Zod inferred types for convenience
-export type { 
+export type {
   WooCommerceProduct,
   WordPressPost,
   WordPressPage,
@@ -12,7 +12,7 @@ export type {
   WooCommerceProductTag,
   WooCommerceProductAttribute,
   WooCommerceProductVariation,
-  WooCommerceProductMetaData
+  WooCommerceProductMetaData,
 } from './schemas';
 
 export interface WordPressPage {
