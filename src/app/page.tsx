@@ -82,8 +82,8 @@ export default function Home() {
           🛠️ Admin Tools & Content Audit
         </h3>
         <p className="text-gray-600 mb-4">
-          Access WordPress content structure, audit utilities, and admin tools for
-          developers and content editors.
+          Access WordPress content structure, audit utilities, and admin tools
+          for developers and content editors.
         </p>
         <a
           href="/wp-audit"
