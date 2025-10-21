@@ -91,21 +91,40 @@ export async function fetchAPI(endpoint: string, options: FetchOptions = {}) {
   const url = `${WORDPRESS_API_URL}${endpoint}`;
 
   try {
-    // Only include valid string headers to prevent overflow errors
-    const safeHeaders: Record<string, string> = {};
-    if (options.headers && typeof options.headers === 'object') {
-      for (const [key, value] of Object.entries(options.headers)) {
-        if (typeof value === 'string') {
-          safeHeaders[key] = value;
-        }
-      }
-    }
+    // Only include minimal headers to prevent overflow errors
+    const minimalHeaders: Record<string, string> = {
+      'Content-Type': 'application/json',
+    };
+    // Log headers for debugging
+    console.log('[WordPress API] fetch headers:', minimalHeaders);
+    const {
+      method = 'GET',
+      body,
+      mode,
+      cache,
+      redirect,
+      referrer,
+      referrerPolicy,
+      integrity,
+      keepalive,
+      signal,
+      // window is not a valid fetch option in most environments, omit it
+    } = options;
+
     const response = await fetch(url, {
-      ...options,
-      headers: {
-        'Content-Type': 'application/json',
-        ...safeHeaders,
-      },
+      method: method as RequestInit['method'],
+      headers: minimalHeaders,
+      body: body as RequestInit['body'],
+      mode: mode as RequestInit['mode'],
+      cache: cache as RequestInit['cache'],
+      redirect: redirect as RequestInit['redirect'],
+      referrer: referrer as RequestInit['referrer'],
+      referrerPolicy: referrerPolicy as RequestInit['referrerPolicy'],
+      integrity: integrity as RequestInit['integrity'],
+      keepalive: keepalive as RequestInit['keepalive'],
+      signal: signal as RequestInit['signal'],
+      // Prevent cookies from being sent
+      credentials: 'omit',
     });
 
     if (!response.ok) {
