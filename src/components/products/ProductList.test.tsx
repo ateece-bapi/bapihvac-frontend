@@ -57,13 +57,9 @@ const completeMockProduct: WooCommerceProduct = {
   cross_sell_ids: [],
   parent_id: 0,
   purchase_note: '',
-  categories: [
-    { id: 1, name: 'Category', slug: 'category' },
-  ],
+  categories: [{ id: 1, name: 'Category', slug: 'category' }],
   tags: [],
-  images: [
-    { id: 1, src: 'https://placehold.co/300x200', alt: 'Test Product' },
-  ],
+  images: [{ id: 1, src: 'https://placehold.co/300x200', alt: 'Test Product' }],
   attributes: [],
   default_attributes: [],
   variations: [],
