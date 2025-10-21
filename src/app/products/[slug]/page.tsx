@@ -2,20 +2,21 @@ import { getProducts } from '@/lib/wpapi';
 import { notFound } from 'next/navigation';
 import { ProductDetails, ProductDescription } from '@/components/products';
 import { ErrorDisplay, BackLink } from '@/components/ui';
-import { WooCommerceProduct } from '@/types/wordpress';
 
-interface ProductPageProps {
-  params: {
-    slug: string;
-  };
-}
-
-export default async function ProductPage({ params }: ProductPageProps) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// TODO: Remove 'any' once Next.js/TypeScript type conflict is resolved. See build history for details.
+export default async function ProductPage(props: any) {
+  const { params } = props;
   try {
-    // Next.js 15+ requires awaiting params for dynamic routes
-    const { slug } = await params;
-    const products = await getProducts();
-    const product = products.find((p: WooCommerceProduct) => p.slug === slug);
+    // Destructure params directly (do not await)
+    const { slug } = params;
+    let products = await getProducts();
+    // Ensure stock_quantity is always number|null, never undefined
+    products = products.map((p) => ({
+      ...p,
+      stock_quantity: p.stock_quantity ?? null,
+    }));
+    const product = products.find((p) => p.slug === slug);
 
     if (!product) {
       notFound();
@@ -41,8 +42,13 @@ export default async function ProductPage({ params }: ProductPageProps) {
 // Generate static params for all products
 export async function generateStaticParams() {
   try {
-    const products = await getProducts();
-    return products.map((product: WooCommerceProduct) => ({
+    let products = await getProducts();
+    // Ensure stock_quantity is always number|null, never undefined
+    products = products.map((p) => ({
+      ...p,
+      stock_quantity: p.stock_quantity ?? null,
+    }));
+    return products.map((product) => ({
       slug: product.slug,
     }));
   } catch (error) {

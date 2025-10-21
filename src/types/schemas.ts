@@ -247,7 +247,7 @@ export const WooCommerceProductSchema = z.object({
   tax_status: z.enum(['taxable', 'shipping', 'none']).default('taxable'),
   tax_class: z.string().default(''),
   manage_stock: z.boolean().default(false),
-  stock_quantity: z.number().nullable().optional(),
+  stock_quantity: z.number().nullable().default(null),
   stock_status: z
     .enum(['instock', 'outofstock', 'onbackorder'])
     .default('instock'),
