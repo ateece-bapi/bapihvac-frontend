@@ -1,7 +1,11 @@
 
+function isRecord(val: unknown): val is Record<string, unknown> {
+  return typeof val === 'object' && val !== null && !Array.isArray(val);
+}
+
 import { getPosts, getPages } from '@/lib/wpapi';
 
-function extractFields(obj: any, prefix = ''): Record<string, string> {
+function extractFields(obj: Record<string, unknown>, prefix = ''): Record<string, string> {
   const fields: Record<string, string> = {};
   for (const key in obj) {
     if (!Object.prototype.hasOwnProperty.call(obj, key)) continue;
@@ -11,12 +15,14 @@ function extractFields(obj: any, prefix = ''): Record<string, string> {
       fields[fieldKey] = 'null';
     } else if (Array.isArray(value)) {
       fields[fieldKey] = `array[${value.length}]`;
-      if (value.length > 0 && typeof value[0] === 'object') {
+      if (value.length > 0 && typeof value[0] === 'object' && isRecord(value[0])) {
         Object.assign(fields, extractFields(value[0], fieldKey + '[0]'));
       }
-    } else if (typeof value === 'object') {
+    } else if (typeof value === 'object' && value !== null) {
       fields[fieldKey] = 'object';
-      Object.assign(fields, extractFields(value, fieldKey));
+      if (isRecord(value)) {
+        Object.assign(fields, extractFields(value, fieldKey));
+      }
     } else {
       fields[fieldKey] = typeof value;
     }

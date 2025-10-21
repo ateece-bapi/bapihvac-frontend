@@ -1,6 +1,19 @@
-import { getPosts, getPages } from '@/lib/wpapi';
+// Deprecated audit page. Use /wp-audit/page.tsx for posts/pages field audit.
+// This component is intentionally minimal and error-free.
 
-function extractFields(obj: any, prefix = ''): Record<string, string> {
+export default function WPAuditFieldsDeprecated() {
+  return (
+    <div style={{ padding: 24, color: '#b00', background: '#fffbe6', border: '1px solid #ffe58f' }}>
+      <h1>Deprecated Audit Page</h1>
+      <p>This page is deprecated. Please use <b>/wp-audit/page</b> for posts/pages field audit.</p>
+    </div>
+  );
+}
+
+function isRecord(val: unknown): val is Record<string, unknown> {
+  return typeof val === 'object' && val !== null && !Array.isArray(val);
+
+function extractFields(obj: Record<string, unknown>, prefix = ''): Record<string, string> {
   const fields: Record<string, string> = {};
   for (const key in obj) {
     if (!Object.prototype.hasOwnProperty.call(obj, key)) continue;
@@ -10,12 +23,14 @@ function extractFields(obj: any, prefix = ''): Record<string, string> {
       fields[fieldKey] = 'null';
     } else if (Array.isArray(value)) {
       fields[fieldKey] = `array[${value.length}]`;
-      if (value.length > 0 && typeof value[0] === 'object') {
+      if (value.length > 0 && typeof value[0] === 'object' && isRecord(value[0])) {
         Object.assign(fields, extractFields(value[0], fieldKey + '[0]'));
       }
-    } else if (typeof value === 'object') {
+    } else if (typeof value === 'object' && value !== null) {
       fields[fieldKey] = 'object';
-      Object.assign(fields, extractFields(value, fieldKey));
+      if (isRecord(value)) {
+        Object.assign(fields, extractFields(value, fieldKey));
+      }
     } else {
       fields[fieldKey] = typeof value;
     }
@@ -23,11 +38,12 @@ function extractFields(obj: any, prefix = ''): Record<string, string> {
   return fields;
 }
 
-export default async function WPAuditFields() {
-  const posts = await getPosts();
-  const pages = await getPages();
-  const postFields = posts.length > 0 ? extractFields(posts[0]) : {};
-  const pageFields = pages.length > 0 ? extractFields(pages[0]) : {};
+
+  // This page is deprecated. Use /wp-audit/page.tsx for posts/pages audit.
+    // Deprecated: This page does not fetch or display any fields.
+    // Use /wp-audit/page.tsx for posts/pages audit.
+    const postFields = {};
+    const pageFields = {};
 
   return (
     <div style={{ padding: 24 }}>
