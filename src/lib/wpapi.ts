@@ -97,10 +97,8 @@ export async function fetchAPI(endpoint: string, options: FetchOptions = {}) {
     };
     // Log headers for debugging
     console.log('[WordPress API] fetch headers:', minimalHeaders);
-    const { method = 'GET', body, mode, cache, redirect, referrer, referrerPolicy, integrity, keepalive, signal, window } = options;
-    const response = await fetch(url, {
-      method,
-      headers: minimalHeaders,
+    const {
+      method = 'GET',
       body,
       mode,
       cache,
@@ -110,7 +108,21 @@ export async function fetchAPI(endpoint: string, options: FetchOptions = {}) {
       integrity,
       keepalive,
       signal,
-      window,
+      // window is not a valid fetch option in most environments, omit it
+    } = options;
+
+    const response = await fetch(url, {
+      method: method as RequestInit['method'],
+      headers: minimalHeaders,
+      body: body as RequestInit['body'],
+      mode: mode as RequestInit['mode'],
+      cache: cache as RequestInit['cache'],
+      redirect: redirect as RequestInit['redirect'],
+      referrer: referrer as RequestInit['referrer'],
+      referrerPolicy: referrerPolicy as RequestInit['referrerPolicy'],
+      integrity: integrity as RequestInit['integrity'],
+      keepalive: keepalive as RequestInit['keepalive'],
+      signal: signal as RequestInit['signal'],
       // Prevent cookies from being sent
       credentials: 'omit',
     });
