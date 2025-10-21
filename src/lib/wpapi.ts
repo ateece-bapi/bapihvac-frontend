@@ -91,21 +91,17 @@ export async function fetchAPI(endpoint: string, options: FetchOptions = {}) {
   const url = `${WORDPRESS_API_URL}${endpoint}`;
 
   try {
-    // Only include valid string headers to prevent overflow errors
-    const safeHeaders: Record<string, string> = {};
-    if (options.headers && typeof options.headers === 'object') {
-      for (const [key, value] of Object.entries(options.headers)) {
-        if (typeof value === 'string') {
-          safeHeaders[key] = value;
-        }
-      }
-    }
+    // Only include minimal headers to prevent overflow errors
+    const minimalHeaders: Record<string, string> = {
+      'Content-Type': 'application/json',
+    };
+    // Log headers for debugging
+    console.log('[WordPress API] fetch headers:', minimalHeaders);
     const response = await fetch(url, {
-      ...options,
-      headers: {
-        'Content-Type': 'application/json',
-        ...safeHeaders,
-      },
+      method: options.method || 'GET',
+      headers: minimalHeaders,
+      // Prevent cookies from being sent
+      credentials: 'omit',
     });
 
     if (!response.ok) {
