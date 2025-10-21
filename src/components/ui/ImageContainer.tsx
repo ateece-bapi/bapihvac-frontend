@@ -12,10 +12,10 @@ interface ImageContainerProps {
 export default function ImageContainer({
   src,
   alt,
-  className = "object-cover",
-  containerClassName = "aspect-square relative bg-gray-100 rounded-md overflow-hidden",
-  sizes = "(max-width: 768px) 100vw, 50vw",
-  priority = false
+  className = 'object-cover',
+  containerClassName = 'aspect-square relative bg-gray-100 rounded-md overflow-hidden',
+  sizes = '(max-width: 768px) 100vw, 50vw',
+  priority = false,
 }: ImageContainerProps) {
   return (
     <div className={containerClassName} style={{ position: 'relative' }}>

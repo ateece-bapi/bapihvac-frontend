@@ -4,10 +4,10 @@ interface ErrorDisplayProps {
   action?: React.ReactNode;
 }
 
-export default function ErrorDisplay({ 
-  title = "Something went wrong", 
+export default function ErrorDisplay({
+  title = 'Something went wrong',
   message,
-  action
+  action,
 }: ErrorDisplayProps) {
   return (
     <div className="max-w-7xl mx-auto p-8">
@@ -19,11 +19,7 @@ export default function ErrorDisplay({
             {message}
           </pre>
         </div>
-        {action && (
-          <div className="mt-6">
-            {action}
-          </div>
-        )}
+        {action && <div className="mt-6">{action}</div>}
       </div>
     </div>
   );

@@ -8,7 +8,8 @@ const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: 'BAPI HVAC - Building Automation Products',
-  description: 'Professional HVAC sensors, transmitters, and building automation equipment from BAPI.',
+  description:
+    'Professional HVAC sensors, transmitters, and building automation equipment from BAPI.',
 };
 
 // Layout component for Next.js application

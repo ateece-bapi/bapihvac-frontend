@@ -16,32 +16,32 @@ export default function Header() {
 
           {/* Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
-            <Link 
-              href="/" 
+            <Link
+              href="/"
               className="flex items-center gap-2 text-gray-700 hover:text-bapi-blue transition-colors"
             >
               <Icon name="home" size="sm" />
               Home
             </Link>
-            
-            <Link 
-              href="/products" 
+
+            <Link
+              href="/products"
               className="flex items-center gap-2 text-gray-700 hover:text-bapi-blue transition-colors"
             >
               <Icon name="sensor" size="sm" />
               Products
             </Link>
-            
-            <Link 
-              href="/categories" 
+
+            <Link
+              href="/categories"
               className="flex items-center gap-2 text-gray-700 hover:text-bapi-blue transition-colors"
             >
               <Icon name="settings" size="sm" />
               Categories
             </Link>
-            
-            <Link 
-              href="/contact" 
+
+            <Link
+              href="/contact"
               className="flex items-center gap-2 text-gray-700 hover:text-bapi-blue transition-colors"
             >
               <Icon name="phone" size="sm" />
@@ -54,14 +54,14 @@ export default function Header() {
             <button className="text-gray-700 hover:text-bapi-blue transition-colors">
               <Icon name="search" size="lg" />
             </button>
-            
+
             <button className="text-gray-700 hover:text-bapi-blue transition-colors relative">
               <Icon name="cart" size="lg" />
               <span className="absolute -top-2 -right-2 bg-bapi-blue text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
                 0
               </span>
             </button>
-            
+
             {/* Mobile menu button */}
             <button className="md:hidden text-gray-700 hover:text-bapi-blue transition-colors">
               <Icon name="menu" size="lg" />

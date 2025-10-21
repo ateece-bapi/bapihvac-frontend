@@ -1,11 +1,11 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 /* BAPI Brand Colors - Tailwind v4 CSS-based configuration */
 @theme {
   --color-bapi-blue: #0066cc;
   --color-bapi-blue-dark: #004499;
   --color-bapi-blue-light: #3388dd;
-  
+
   --font-family-sans: ui-sans-serif, system-ui, sans-serif;
 }
 

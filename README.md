@@ -11,7 +11,7 @@ Now supports WooCommerce product integration, category filtering, and mock/live 
 
 ## 🚀 Quick Start
 
-```bash
+````bash
 
 # Install dependencies
 pnpm install
@@ -44,7 +44,8 @@ If you want to enable pre-commit hooks locally, run:
 
 ```bash
 pnpm husky install
-```
+````
+
 This is not required in CI and is only needed for local development.
 
 ## 🛒 WooCommerce Integration
@@ -56,11 +57,11 @@ This is not required in CI and is only needed for local development.
 ## 🧑‍💻 Troubleshooting
 
 - If you see "Headers Overflow" or API errors:
-	- Double-check your API keys and category ID in `.env.local`.
-	- Ensure only valid string headers are sent (see `fetchAPI` in `wpapi.ts`).
-	- Test your API endpoint with `curl` or Postman.
-	- Set `USE_MOCK_PRODUCTS=true` to bypass live API for local development.
-	- See enhanced error logs in the console for details.
+  - Double-check your API keys and category ID in `.env.local`.
+  - Ensure only valid string headers are sent (see `fetchAPI` in `wpapi.ts`).
+  - Test your API endpoint with `curl` or Postman.
+  - Set `USE_MOCK_PRODUCTS=true` to bypass live API for local development.
+  - See enhanced error logs in the console for details.
 
 ## 📦 API Client
 

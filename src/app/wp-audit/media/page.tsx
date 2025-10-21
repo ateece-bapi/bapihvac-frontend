@@ -1,4 +1,3 @@
-
 function isRecord(val: unknown): val is Record<string, unknown> {
   return typeof val === 'object' && val !== null && !Array.isArray(val);
 }
@@ -7,9 +6,12 @@ function isRecord(val: unknown): val is Record<string, unknown> {
 export default async function WPAuditMedia() {
   const media = await fetch(
     `${process.env.NEXT_PUBLIC_WORDPRESS_API_URL || 'https://www.bapihvac.com/wp-json'}/wp/v2/media?per_page=5`
-  ).then(res => res.json());
+  ).then((res) => res.json());
 
-  function extractFields(obj: Record<string, unknown>, prefix = ''): Record<string, string> {
+  function extractFields(
+    obj: Record<string, unknown>,
+    prefix = ''
+  ): Record<string, string> {
     const fields: Record<string, string> = {};
     for (const key in obj) {
       if (!Object.prototype.hasOwnProperty.call(obj, key)) continue;
@@ -19,7 +21,11 @@ export default async function WPAuditMedia() {
         fields[fieldKey] = 'null';
       } else if (Array.isArray(value)) {
         fields[fieldKey] = `array[${value.length}]`;
-        if (value.length > 0 && typeof value[0] === 'object' && isRecord(value[0])) {
+        if (
+          value.length > 0 &&
+          typeof value[0] === 'object' &&
+          isRecord(value[0])
+        ) {
           Object.assign(fields, extractFields(value[0], fieldKey + '[0]'));
         }
       } else if (typeof value === 'object' && value !== null) {
@@ -40,15 +46,32 @@ export default async function WPAuditMedia() {
     <div style={{ padding: 24 }}>
       <h1>Media/Attachment Audit</h1>
       <table border={1} cellPadding={4}>
-        <thead><tr><th>Field</th><th>Type/Shape</th></tr></thead>
+        <thead>
+          <tr>
+            <th>Field</th>
+            <th>Type/Shape</th>
+          </tr>
+        </thead>
         <tbody>
           {Object.entries(mediaFields).map(([field, type]) => (
-            <tr key={field}><td>{field}</td><td>{type}</td></tr>
+            <tr key={field}>
+              <td>{field}</td>
+              <td>{type}</td>
+            </tr>
           ))}
         </tbody>
       </table>
       <h2>Raw Data Example</h2>
-      <pre style={{ background: '#eee', padding: 12, maxHeight: 300, overflow: 'auto' }}>{JSON.stringify(media[0], null, 2)}</pre>
+      <pre
+        style={{
+          background: '#eee',
+          padding: 12,
+          maxHeight: 300,
+          overflow: 'auto',
+        }}
+      >
+        {JSON.stringify(media[0], null, 2)}
+      </pre>
     </div>
   );
 }

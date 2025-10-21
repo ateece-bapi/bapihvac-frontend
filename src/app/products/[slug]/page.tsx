@@ -30,7 +30,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
     );
   } catch (error) {
     return (
-      <ErrorDisplay 
+      <ErrorDisplay
         title="Error Loading Product"
         message={error instanceof Error ? error.message : 'Unknown error'}
       />

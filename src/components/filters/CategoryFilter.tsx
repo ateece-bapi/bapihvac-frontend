@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 export type Category = {
   id: string;
@@ -21,7 +21,7 @@ export const CategoryFilter: React.FC<CategoryFilterProps> = ({
       {categories.map((cat) => (
         <button
           key={cat.id}
-          className={`px-3 py-1 rounded border text-sm transition-colors ${selectedCategoryIds.includes(cat.id) ? "bg-blue-600 text-white" : "bg-gray-100 text-gray-800"}`}
+          className={`px-3 py-1 rounded border text-sm transition-colors ${selectedCategoryIds.includes(cat.id) ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-800'}`}
           aria-pressed={selectedCategoryIds.includes(cat.id)}
           onClick={() => {
             const isSelected = selectedCategoryIds.includes(cat.id);

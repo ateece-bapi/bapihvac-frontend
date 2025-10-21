@@ -113,9 +113,11 @@ export const WordPressPostSchema = z.object({
   id: z.number(),
   date: z.string(),
   date_gmt: z.string().optional(),
-  guid: z.object({
-    rendered: z.string(),
-  }).optional(),
+  guid: z
+    .object({
+      rendered: z.string(),
+    })
+    .optional(),
   modified: z.string().optional(),
   modified_gmt: z.string().optional(),
   slug: z.string(),
@@ -142,9 +144,11 @@ export const WordPressPageSchema = z.object({
   id: z.number(),
   date: z.string(),
   date_gmt: z.string().optional(),
-  guid: z.object({
-    rendered: z.string(),
-  }).optional(),
+  guid: z
+    .object({
+      rendered: z.string(),
+    })
+    .optional(),
   modified: z.string().optional(),
   modified_gmt: z.string().optional(),
   slug: z.string(),
@@ -219,7 +223,9 @@ export const WooCommerceProductSchema = z.object({
   type: z.enum(['simple', 'grouped', 'external', 'variable']).default('simple'),
   status: z.enum(['draft', 'pending', 'private', 'publish']).default('publish'),
   featured: z.boolean().default(false),
-  catalog_visibility: z.enum(['visible', 'catalog', 'search', 'hidden']).default('visible'),
+  catalog_visibility: z
+    .enum(['visible', 'catalog', 'search', 'hidden'])
+    .default('visible'),
   description: z.string().default(''),
   short_description: z.string().default(''),
   sku: z.string().default(''),
@@ -242,7 +248,9 @@ export const WooCommerceProductSchema = z.object({
   tax_class: z.string().default(''),
   manage_stock: z.boolean().default(false),
   stock_quantity: z.number().nullable().optional(),
-  stock_status: z.enum(['instock', 'outofstock', 'onbackorder']).default('instock'),
+  stock_status: z
+    .enum(['instock', 'outofstock', 'onbackorder'])
+    .default('instock'),
   backorders: z.enum(['no', 'notify', 'yes']).default('no'),
   backorders_allowed: z.boolean().default(false),
   backordered: z.boolean().default(false),
@@ -265,19 +273,27 @@ export const WooCommerceProductSchema = z.object({
   tags: z.array(ProductTagSchema).default([]),
   images: z.array(ProductImageSchema).default([]),
   attributes: z.array(ProductAttributeSchema).default([]),
-  default_attributes: z.array(z.object({
-    id: z.number(),
-    name: z.string(),
-    option: z.string(),
-  })).default([]),
+  default_attributes: z
+    .array(
+      z.object({
+        id: z.number(),
+        name: z.string(),
+        option: z.string(),
+      })
+    )
+    .default([]),
   variations: z.array(z.number()).default([]),
   grouped_products: z.array(z.number()).default([]),
   menu_order: z.number().default(0),
-  meta_data: z.array(z.object({
-    id: z.number(),
-    key: z.string(),
-    value: z.unknown(),
-  })).default([]),
+  meta_data: z
+    .array(
+      z.object({
+        id: z.number(),
+        key: z.string(),
+        value: z.unknown(),
+      })
+    )
+    .default([]),
 });
 
 // Array schemas for API responses
@@ -295,8 +311,14 @@ export type ProductTag = z.infer<typeof ProductTagSchema>;
 
 // Environment Variables Schema
 export const EnvSchema = z.object({
-  NEXT_PUBLIC_WORDPRESS_API_URL: z.string().url().default('https://www.bapihvac.com/wp-json'),
-  WORDPRESS_API_URL: z.string().url().default('https://www.bapihvac.com/wp-json'),
+  NEXT_PUBLIC_WORDPRESS_API_URL: z
+    .string()
+    .url()
+    .default('https://www.bapihvac.com/wp-json'),
+  WORDPRESS_API_URL: z
+    .string()
+    .url()
+    .default('https://www.bapihvac.com/wp-json'),
   WOOCOMMERCE_CONSUMER_KEY: z.string().optional(),
   WOOCOMMERCE_CONSUMER_SECRET: z.string().optional(),
   WORDPRESS_AUTH_USERNAME: z.string().optional(),
