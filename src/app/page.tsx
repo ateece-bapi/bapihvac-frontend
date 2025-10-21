@@ -16,7 +16,7 @@ export default function Home() {
           <div className="space-y-3">
             <div className="flex items-center space-x-3">
               <span className="text-green-500 font-bold">✅</span>
-              <span>Next.js 14 with App Router</span>
+              <span>Next.js 15 with App Router</span>
             </div>
             <div className="flex items-center space-x-3">
               <span className="text-green-500 font-bold">✅</span>
