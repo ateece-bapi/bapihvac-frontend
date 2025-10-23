@@ -6,9 +6,9 @@ import { ErrorDisplay, BackLink } from '@/components/ui';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 // TODO: Remove 'any' once Next.js/TypeScript type conflict is resolved. See build history for details.
 export default async function ProductPage(props: any) {
-  const { params } = props;
+  // Await params if it's a Promise (per Next.js warning)
+  const params = typeof props.params?.then === 'function' ? await props.params : props.params;
   try {
-    // Destructure params directly (do not await)
     const { slug } = params;
     let products = await getProducts();
     // Ensure stock_quantity is always number|null, never undefined

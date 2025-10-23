@@ -2,7 +2,7 @@
 'use client';
 
 import { getProducts } from '@/lib/wpapi';
-import { ProductGrid } from '@/components/products';
+import { ProductList } from '@/components/products';
 
 import React, { useEffect, useState, useMemo } from 'react';
 import { ErrorDisplay } from '@/components/ui';
@@ -80,11 +80,8 @@ export default function ProductsPage() {
         />
       </div>
       <div className="flex-1">
-        <ProductGrid
-          products={filteredProducts}
-          title="BAPI HVAC Products"
-          showCount={true}
-        />
+        {/* Swap ProductGrid for ProductList to demo new component */}
+        <ProductList products={filteredProducts} />
       </div>
     </main>
   );
