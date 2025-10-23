@@ -26,6 +26,15 @@ yarn-error.log*
 .env*.local
 .env
 
+# Local WordPress Docker setup
+local-wordpress/certs/
+local-wordpress/wordpress/
+local-wordpress/docker-compose.yml.bak
+local-wordpress/setup-local.sh
+local-wordpress/docker/
+local-wordpress/php/conf.d/docker-php-ext-mysqli.ini
+local-wordpress/php/conf.d/docker-php-ext-pdo_mysql.ini
+
 # vercel
 .vercel
 
