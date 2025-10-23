@@ -1,0 +1,16 @@
+FROM php:8.2-fpm
+
+# install common deps and php extensions used by WP/site
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
+    libzip-dev libpng-dev libjpeg-dev libfreetype6-dev libicu-dev zlib1g-dev \
+    git unzip curl libonig-dev wget pkg-config libxml2-dev default-mysql-client \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install pdo pdo_mysql zip intl gd bcmath opcache mbstring exif \
+    && pecl install xdebug-3.2.0 || true \
+    && docker-php-ext-enable xdebug || true \
+    && rm -rf /var/lib/apt/lists/*
+
+# composer
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+
+WORKDIR /var/www/html

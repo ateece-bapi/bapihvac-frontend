@@ -1,0 +1,6 @@
+# keep Docker build context small
+node_modules
+.next
+.vscode
+.git
+*.log

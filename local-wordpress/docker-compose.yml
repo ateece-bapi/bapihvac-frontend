@@ -1,0 +1,82 @@
+version: "3.8"
+
+services:
+  php:
+    build:
+      context: .
+      dockerfile: Dockerfile-php
+    container_name: wp_php
+    volumes:
+      - ./wordpress:/var/www/html
+      - ./php/conf.d:/usr/local/etc/php/conf.d
+    environment:
+      TZ: UTC
+    networks:
+      - wp-network
+
+  nginx:
+    image: nginx:1.25-alpine
+    container_name: wp_nginx
+    depends_on:
+      - php
+    ports:
+      - "8080:80"    # HTTP on host -> http://localhost:8080
+      - "8443:443"   # HTTPS on host -> https://dev.bapihvac.com:8443
+    volumes:
+      - ./wordpress:/var/www/html:ro
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./certs:/etc/nginx/certs:ro
+      - ./nginx/.htpasswd:/etc/nginx/.htpasswd:ro
+    networks:
+      - wp-network
+
+  db:
+    image: mysql:8.0
+    container_name: wp_db
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./mysql/conf.d:/etc/mysql/conf.d:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - wp-network
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: wp_phpmyadmin
+    environment:
+      PMA_HOST: db
+      PMA_USER: root
+      PMA_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    ports:
+      - "8081:80"
+    depends_on:
+      - db
+    networks:
+      - wp-network
+
+  wpcli:
+    image: wordpress:6.4-php8.2-cli
+    container_name: wp_cli
+    entrypoint: ["sleep","infinity"]
+    volumes:
+      - ./wordpress:/var/www/html
+    depends_on:
+      - db
+      - php
+    networks:
+      - wp-network
+
+volumes:
+  db_data:
+
+networks:
+  wp-network:

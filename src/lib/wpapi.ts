@@ -78,9 +78,6 @@ export async function getComments(): Promise<WordPressComment[]> {
   return result.data;
 }
 
-const WORDPRESS_API_URL =
-  process.env.NEXT_PUBLIC_WORDPRESS_API_URL ||
-  'https://www.bapihvac.com/wp-json';
 
 interface FetchOptions {
   headers?: Record<string, string>;
@@ -88,18 +85,23 @@ interface FetchOptions {
 }
 
 export async function fetchAPI(endpoint: string, options: FetchOptions = {}) {
-  // Use the proxy only in production (Vercel), direct API in local/dev
-  const targetUrl = `${WORDPRESS_API_URL}${endpoint}`;
+  // Always use the proxy for all environments except when using mock data
+  const restPath = endpoint.replace(/^\/?wp-json\/?/, 'wp-json/');
   let url: string;
-  if (typeof window === 'undefined' && process.env.VERCEL_URL) {
-    // On Vercel, use absolute proxy URL
-    url = `https://${process.env.VERCEL_URL}/api/wp-proxy?url=${encodeURIComponent(targetUrl)}`;
-  } else if (typeof window !== 'undefined') {
-    // Client-side: relative proxy URL
-    url = `/api/wp-proxy?url=${encodeURIComponent(targetUrl)}`;
+  const useMock = process.env.USE_MOCK_PRODUCTS === 'true';
+  if (useMock) {
+    url = '';
+  } else if (typeof window === 'undefined') {
+    // SSR/server: use absolute URL for proxy
+    const base = process.env.VERCEL_URL
+      ? `https://${process.env.VERCEL_URL}`
+      : process.env.NEXT_PUBLIC_SITE_URL
+      ? process.env.NEXT_PUBLIC_SITE_URL.replace(/\/$/, '')
+      : 'http://localhost:3000';
+    url = `${base}/api/wp-proxy?path=${encodeURIComponent(restPath)}`;
   } else {
-    // Local/dev SSR/build: use direct API URL
-    url = targetUrl;
+    // Client/browser: use relative URL
+    url = `/api/wp-proxy?path=${encodeURIComponent(restPath)}`;
   }
 
   try {
