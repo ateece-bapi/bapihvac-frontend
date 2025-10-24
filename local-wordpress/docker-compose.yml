@@ -64,7 +64,10 @@ services:
       - wp-network
 
   wpcli:
-    image: wordpress:6.4-php8.2-cli
+    build:
+      context: ./docker
+      dockerfile: wpcli.Dockerfile
+    image: local-wordpress-wpcli
     container_name: wp_cli
     entrypoint: ["sleep","infinity"]
     volumes:
