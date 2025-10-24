@@ -28,7 +28,8 @@ yarn-error.log*
 
 # Local WordPress Docker setup
 local-wordpress/certs/
-local-wordpress/wordpress/
+local-wordpress/wordpress/*
+!local-wordpress/wordpress/wp-content/mu-plugins/
 local-wordpress/docker-compose.yml.bak
 local-wordpress/setup-local.sh
 local-wordpress/docker/
