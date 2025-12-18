@@ -78,7 +78,6 @@ export async function getComments(): Promise<WordPressComment[]> {
   return result.data;
 }
 
-
 interface FetchOptions {
   headers?: Record<string, string>;
   [key: string]: unknown;
@@ -96,8 +95,8 @@ export async function fetchAPI(endpoint: string, options: FetchOptions = {}) {
     const base = process.env.VERCEL_URL
       ? `https://${process.env.VERCEL_URL}`
       : process.env.NEXT_PUBLIC_SITE_URL
-      ? process.env.NEXT_PUBLIC_SITE_URL.replace(/\/$/, '')
-      : 'http://localhost:3000';
+        ? process.env.NEXT_PUBLIC_SITE_URL.replace(/\/$/, '')
+        : 'http://localhost:3000';
     url = `${base}/api/wp-proxy?path=${encodeURIComponent(restPath)}`;
   } else {
     // Client/browser: use relative URL

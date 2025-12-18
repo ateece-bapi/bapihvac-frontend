@@ -7,7 +7,10 @@ import { ErrorDisplay, BackLink } from '@/components/ui';
 // TODO: Remove 'any' once Next.js/TypeScript type conflict is resolved. See build history for details.
 export default async function ProductPage(props: any) {
   // Await params if it's a Promise (per Next.js warning)
-  const params = typeof props.params?.then === 'function' ? await props.params : props.params;
+  const params =
+    typeof props.params?.then === 'function'
+      ? await props.params
+      : props.params;
   try {
     const { slug } = params;
     let products = await getProducts();
